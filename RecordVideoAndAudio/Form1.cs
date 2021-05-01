@@ -114,16 +114,23 @@ namespace RecordVideoAndAudio
         {
             if (!isStart)
             {
-                if (microphonesComboBox.SelectedIndex < 0)
+
+                if (microphonesComboBox.SelectedIndex < 0 && speakerComboBox.SelectedIndex < 0)
                 {
-                    MessageBox.Show("Select divace microphone");
+                    MessageBox.Show("Select divace for record");
                     return;
                 }
-                if (speakerComboBox.SelectedIndex < 0)
-                {
-                    MessageBox.Show("Select divace speaker");
-                    return;
-                }
+
+                //if (microphonesComboBox.SelectedIndex < 0)
+                //{
+                //    MessageBox.Show("Select divace microphone");
+                //    return;
+                //}
+                //if (speakerComboBox.SelectedIndex < 0)
+                //{
+                //    MessageBox.Show("Select divace speaker");
+                //    return;
+                //}
                 config.MicrophoneIndex = microphonesComboBox.SelectedIndex;
                 config.SpeakerIndex = speakerComboBox.SelectedIndex;
                 SaveConfig();

@@ -49,6 +49,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,7 +62,80 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioContracts\IAudioFileWriter.cs" />
+    <Compile Include="AudioContracts\IAudioItem.cs" />
+    <Compile Include="AudioContracts\IAudioProvider.cs" />
+    <Compile Include="AudioContracts\IAudioSource.cs" />
+    <Compile Include="AudioContracts\IAudioWriterItem.cs" />
+    <Compile Include="AudioContracts\WaveFormat\WaveFormat.cs" />
+    <Compile Include="AudioContracts\WaveFormat\WaveFormatEncoding.cs" />
+    <Compile Include="AudioFileWriter.cs" />
+    <Compile Include="AudioRecorder.cs" />
+    <Compile Include="Audio\MixedAudioProvider.cs" />
+    <Compile Include="Audio\NAudioItem.cs" />
+    <Compile Include="Audio\NAudioNotificationClient.cs" />
+    <Compile Include="Audio\NAudioProvider.cs" />
+    <Compile Include="Audio\NAudioSource.cs" />
+    <Compile Include="Audio\WasapiCaptureProvider.cs" />
+    <Compile Include="Audio\WasapiLoopbackCaptureProvider.cs" />
+    <Compile Include="Audio\WaveFormatExtensions.cs" />
+    <Compile Include="Base\IBinder.cs" />
+    <Compile Include="Base\IBitmapFrame.cs" />
+    <Compile Include="Base\ILocalizationProvider.cs" />
+    <Compile Include="Base\IVideoConverter.cs" />
+    <Compile Include="Base\IVideoFileWriter.cs" />
+    <Compile Include="Base\IVideoWriterItem.cs" />
+    <Compile Include="Base\IVideoWriterProvider.cs" />
+    <Compile Include="Base\NotifyPropertyChanged.cs" />
+    <Compile Include="Base\PropertyStore.cs" />
+    <Compile Include="Base\ProxySettings.cs" />
+    <Compile Include="Base\ServiceProvider.cs" />
+    <Compile Include="Base\VideoConverterParams.cs" />
+    <Compile Include="Base\VideoWriterArgs.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="FFmpeg\ArgsBuilder\FFmpegArgs.cs" />
+    <Compile Include="FFmpeg\ArgsBuilder\FFmpegArgsBuilder.cs" />
+    <Compile Include="FFmpeg\ArgsBuilder\FFmpegInputArgs.cs" />
+    <Compile Include="FFmpeg\ArgsBuilder\FFmpegOutputArgs.cs" />
+    <Compile Include="FFmpeg\Audio\FFmpegAudioArgsProvider.cs" />
+    <Compile Include="FFmpeg\Audio\FFmpegAudioItem.cs" />
+    <Compile Include="FFmpeg\Audio\FFmpegAudioWriter.cs" />
+    <Compile Include="FFmpeg\DownloadFFmpeg.cs" />
+    <Compile Include="FFmpeg\FFmpegDownloaderProgress.cs" />
+    <Compile Include="FFmpeg\FFmpegDownloaderState.cs" />
+    <Compile Include="FFmpeg\FFmpegException.cs" />
+    <Compile Include="FFmpeg\FFMpegLogItem.cs" />
+    <Compile Include="FFmpeg\FFmpegModule.cs" />
+    <Compile Include="FFmpeg\FFmpegNotFoundException.cs" />
+    <Compile Include="FFmpeg\FFmpegService.cs" />
+    <Compile Include="FFmpeg\FFmpegTrimmer.cs" />
+    <Compile Include="FFmpeg\FFmpgDownloadModel.cs" />
+    <Compile Include="FFmpeg\IFFmpegLogEntry.cs" />
+    <Compile Include="FFmpeg\IFFmpegLogRepository.cs" />
+    <Compile Include="FFmpeg\IFFmpegViewsProvider.cs" />
+    <Compile Include="FFmpeg\Settings\FFmpegCodecSettings.cs" />
+    <Compile Include="FFmpeg\Settings\FFMpegSettings.cs" />
+    <Compile Include="FFmpeg\Settings\X264Settings.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\CustomFFmpegVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\CustomStreamingVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\FFmpegVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\NvencVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\QsvHevcVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\StreamingVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\TempFileVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\TwitchVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\Vp8VideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\Vp9VideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\X264VideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\XvidVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\Codecs\YouTubeLiveVideoCodec.cs" />
+    <Compile Include="FFmpeg\Video\FFmpegGifConverter.cs" />
+    <Compile Include="FFmpeg\Video\FFmpegReplayWriter.cs" />
+    <Compile Include="FFmpeg\Video\FFmpegVideoConverter.cs" />
+    <Compile Include="FFmpeg\Video\FFmpegVideoWriter.cs" />
+    <Compile Include="FFmpeg\Video\FFmpegVideoWriterArgs.cs" />
+    <Compile Include="FFmpeg\Video\FFmpegWriterProvider.cs" />
+    <Compile Include="FFmpeg\Video\StreamingWriterProvider.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,6 +144,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecorderAudio_old.cs" />
     <Compile Include="RecorderAudio.cs" />
     <Compile Include="RecorderVideo.cs" />
     <Compile Include="SilentWaveProvider.cs" />

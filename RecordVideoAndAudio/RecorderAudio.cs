@@ -1,4 +1,6 @@
-﻿using NAudio.CoreAudioApi;
+﻿using Captura.Audio;
+using Captura.FFmpeg;
+using NAudio.CoreAudioApi;
 using NAudio.Lame;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
@@ -6,36 +8,101 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RecordVideoAndAudio
 {
     public class RecorderAudio
     {
         const string extention = ".mp3";
-        WaveInEvent waveOut;
-        WasapiLoopbackCapture waveIn;
-
-        LameMP3FileWriter waveWriter_in;        
-        LameMP3FileWriter waveWriter_out;
         public bool Startded { get; private set; } = false;
         public string FileName { get; private set; }
 
-        WaveFormat wf;
         public RecorderAudio()
         {
-            wf = WaveFormat.CreateCustomFormat(tag: WaveFormatEncoding.IeeeFloat, sampleRate: 48000, channels: 2, averageBytesPerSecond: 384000, blockAlign: 8, bitsPerSample: 32);
         }
-
+        IAudioSource _audioSource;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="inputDeviceIndex">microphone</param>
+        /// <param name="outputDeviceIndex">speaker</param>
         public void StartRecording(String fileName, int inputDeviceIndex, int outputDeviceIndex)
         {
             if (!Startded)
             {
-                this.FileName = fileName;
-                this.RecordIn(outputDeviceIndex);
-                this.RecordOut(inputDeviceIndex);
+                FileName = fileName;
+                _audioSource = new NAudioSource();
+
+                if (!SetupAudioProvider(out var audioProvider))
+                    return;
+
+                if (!InitAudioRecorder(audioProvider))
+                {
+                    audioProvider?.Dispose();
+
+                    return;
+                }
+
+                _recorder.Start();
+
                 Startded = true;
             }
         }
+
+        bool SetupAudioProvider(out IAudioProvider AudioProvider)
+        {
+            AudioProvider = null;
+
+            try
+            {
+                    AudioProvider = _audioSource.GetAudioProviderDefault();
+                
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.Message);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        bool InitAudioRecorder(IAudioProvider AudioProvider)
+        {
+            try
+            {
+                _recorder = GetAudioRecorder(AudioProvider);
+            }
+            catch (Exception ex)
+            {
+                //_ffmpegViewsProvider.ShowUnavailable();
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+
+                return false;
+            }
+
+            return true;
+        }
+        IRecorder GetAudioRecorder(IAudioProvider AudioProvider)
+        {
+            var audioFileWriter = GetAudioFileWriter(
+                FileName + extention,
+                AudioProvider?.WaveFormat,
+                80);
+
+            return new AudioRecorder(audioFileWriter, AudioProvider);
+        }
+        public IAudioFileWriter GetAudioFileWriter(string FileName, Captura.Audio.WaveFormat Wf, int AudioQuality)
+        {
+            var AudioArgsProvider = FFmpegAudioItem.Mp3;
+            return new FFmpegAudioWriter(FileName, AudioQuality, AudioArgsProvider, Wf.SampleRate, Wf.Channels);
+        }
+
+
+
         public List<string> DevicesOut()
         {
             List<string> list = new List<string>();
@@ -47,6 +114,8 @@ namespace RecordVideoAndAudio
             return list;
         }
         MMDeviceCollection _devices;
+        private IRecorder _recorder;
+
         public List<string> DevicesIn()
         {
             List<string> list = new List<string>();
@@ -60,129 +129,12 @@ namespace RecordVideoAndAudio
             }
             return list;
         }
-
-
-        object o1 = new object();
-        object o2 = new object();
-
-        /// <summary>
-        /// переменная шума для динамиков, когда из динамиков не выходит звук
-        /// </summary>
-        WaveOut waveOneOut;
-        //запись входящих звуков из динамиков
-        private void RecordIn(int inputDeviceIndex)
-        {
-            lock (o1)
-            {
-                var device = _devices.ElementAt(inputDeviceIndex);                
-                waveIn = new WasapiLoopbackCapture()
-                {                
-                };
-                
-                waveIn.DataAvailable += WaveIn_DataAvailable;
-                waveIn.RecordingStopped += this.WaveIn_RecordingStopped;
-
-                waveWriter_in = new LameMP3FileWriter(FileName + "_in" + extention, wf, 32);
-
-                waveOneOut = new WaveOut();
-                waveOneOut.Init(new SilentWaveProvider());
-                waveOneOut.Play();
-
-                waveIn.StartRecording();
-            }
-        }
-        /// <summary>
-        /// запись исходящих звуков из микрофонов
-        /// </summary>
-        /// <param name="inputDeviceIndex"></param>
-        private void RecordOut(int inputDeviceIndex)
-        {
-            lock (o2)
-            {
-                waveOut = new WaveInEvent
-                {
-                    DeviceNumber = inputDeviceIndex,
-                    WaveFormat = wf                    
-                };                
-
-                waveOut.DataAvailable += this.WaveOut_DataAvailable;
-                waveOut.RecordingStopped += this.WaveOut_RecordingStopped;
-
-                waveWriter_out = new LameMP3FileWriter(FileName + "_out" + extention, wf, 32);
-                waveOut.StartRecording();
-            }
-        }
-        private void WaveOut_RecordingStopped(object sender, StoppedEventArgs e)
-        {
-        }
-        private void WaveIn_RecordingStopped(object sender, StoppedEventArgs e)
-        {
-
-        }
-        private void WaveIn_DataAvailable(object sender, WaveInEventArgs e)
-        {
-            if (waveWriter_in == null) return;
-            waveWriter_in.Write(e.Buffer, 0, e.BytesRecorded);
-            //waveWriter_in.Flush();
-        }
-        private void WaveOut_DataAvailable(object sender, WaveInEventArgs e)
-        {
-            if (waveWriter_out == null) return;
-            waveWriter_out.Write(e.Buffer, 0, e.BytesRecorded);
-            //waveWriter_out.Flush();
-        }
+        
         public void StopRecording()
         {
-            if (waveOut != null)
-            {
-                waveOut.StopRecording();
-                waveOut.Dispose();
-                waveOut = null;
-            }
-            if (waveIn != null)
-            {
-                waveOneOut.Stop();
-                waveIn.StopRecording();
-                waveIn.Dispose();
-            }
-            if (this.waveWriter_in != null)
-            {
-                this.waveWriter_in.Flush();
-                this.waveWriter_in.Dispose();
-                this.waveWriter_in = null;
-            }
-            if (this.waveWriter_out != null)
-            {
-                this.waveWriter_out.Flush();
-                this.waveWriter_out.Dispose();
-                this.waveWriter_out = null;
-            }
-            MixFile();
-            Startded = false;
-        }
-        private void MixFile()
-        {
+            _recorder.Dispose();
 
-            try
-            {
-                if (!(File.Exists(FileName + "_in" + extention)
-                && File.Exists(FileName + "_out" + extention)))
-                {
-                    return;
-                }
-                using (var reader1 = new AudioFileReader(FileName + "_in" + extention))
-                using (var reader2 = new AudioFileReader(FileName + "_out" + extention))
-                {
-                    var mixer = new MixingSampleProvider(new[] { reader1, reader2 });
-                    WaveFileWriter.CreateWaveFile16(FileName + extention, mixer);
-                }
-                File.Delete(FileName + "_in" + extention);
-                File.Delete(FileName + "_out" + extention);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
+            Startded = false;
+        }        
     }
 }
