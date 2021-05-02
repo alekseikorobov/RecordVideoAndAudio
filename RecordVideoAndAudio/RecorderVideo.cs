@@ -9,6 +9,13 @@ using SharpAvi.Output;
 using System.Diagnostics;
 using System.Windows.Forms;
 using SharpAvi;
+using Captura.Audio;
+using Captura.Video;
+using Captura.Windows;
+using Captura;
+using System.Collections.Generic;
+using System.Linq;
+using Captura.FFmpeg;
 
 namespace RecordVideoAndAudio
 {
@@ -16,45 +23,97 @@ namespace RecordVideoAndAudio
     {
         private readonly int screenWidth;
         private readonly int screenHeight;
-        private AviWriter writer;
-        private IAviVideoStream videoStream;
-        private Thread screenThread;
-        private ManualResetEvent stopThread;
-        private AutoResetEvent videoFrameWritten;
+        private Recorder _recorder;
 
-        public RecorderVideo()
+        public RecorderAudio RecorderAudio { get; }
+        internal X264VideoCodec VideoWriter { get; }
+        public string FileName { get; private set; }
+
+        public RecorderVideo(RecorderAudio recorderAudio)
         {
             screenHeight = Screen.PrimaryScreen.Bounds.Height;
             screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            RecorderAudio = recorderAudio;
+            VideoWriter = new X264VideoCodec();
 
         }
+        IImageProvider GetImageProvider(/*RecordingModelParams RecordingParams*/)
+        {
+            var _platformServices = new WindowsPlatformServices();
+            return _platformServices.GetAllScreensProvider(true,
+                false /*_videoSettings.RecorderMode == RecorderMode.Steps*/);
+        }
+        IImageProvider GetImageProviderWithOverlays()
+        {
+            var imageProvider = GetImageProvider();
 
+            return imageProvider == null
+                ? null
+                : new OverlayedImageProvider(imageProvider, GetOverlays().ToArray());
+        }
+        IEnumerable<IOverlay> GetOverlays()
+        {
+            MouseOverlaySettings MousePointerOverlay = new MouseOverlaySettings
+            {
+                Color = Color.FromArgb(200, 239, 108, 0)
+            };
+
+            yield return new MousePointerOverlay(MousePointerOverlay);
+        }
+
+        IVideoFileWriter GetVideoFileWriter(IImageProvider ImgProvider, IAudioProvider AudioProvider, 
+            //RecordingModelParams RecordingParams, 
+            string FileName = null)
+        {
+
+            var args = new VideoWriterArgs
+            {
+                FileName = FileName, //?? CurrentFileName,
+                FrameRate = 20,//Settings.Video.FrameRate,
+                VideoQuality = 70,//Settings.Video.Quality,
+                ImageProvider = ImgProvider,
+                AudioQuality = 80,//Settings.Audio.Quality,
+                AudioProvider = AudioProvider
+            };
+
+            return VideoWriter.GetVideoFileWriter(args);
+        }
+
+        bool SetupVideoRecorder(IAudioProvider AudioProvider)
+        {
+            var imgProvider = GetImageProviderWithOverlays();
+
+            IVideoFileWriter videoEncoder;
+
+            try
+            {
+                Captura.Windows.MediaFoundation.MfManager.Startup();
+
+                videoEncoder = GetVideoFileWriter(imgProvider, AudioProvider);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+
+                imgProvider?.Dispose();
+
+                return false;
+            }
+
+            _recorder = new Recorder(videoEncoder, imgProvider, 20, AudioProvider);
+
+            return true;
+        }
         public void StartRecord(string fileName,
             FourCC codec, int quality)
         {
-
-            stopThread = new ManualResetEvent(false);
-            videoFrameWritten = new AutoResetEvent(false);
-
-            // Create AVI writer and specify FPS
-            writer = new AviWriter(fileName)
+            FileName = fileName;
+            RecorderAudio.SetupAudioProvider(fileName);
+            if (!SetupVideoRecorder(RecorderAudio.AudioProvider))
             {
-                FramesPerSecond = 10,
-                EmitIndex1 = true,
-            };
-
-            // Create video stream
-            videoStream = CreateVideoStream(codec, quality);
-            // Set only name. Other properties were when creating stream, 
-            // either explicitly by arguments or implicitly by the encoder used
-            videoStream.Name = "Screencast";
-
-            screenThread = new Thread(RecordScreen)
-            {
-                Name = typeof(RecorderVideo).Name + ".RecordScreen",
-                IsBackground = true
-            };
-            screenThread.Start();
+                return;
+            }
+            _recorder.Start();
         }
 
 
@@ -82,71 +141,12 @@ namespace RecordVideoAndAudio
             }
         }
 
-        
+
         public void StopRecord()
         {
-            stopThread.Set();
-            screenThread.Join();
+            //Captura.Windows.MediaFoundation.MfManager.Shutdown();
+            _recorder.Dispose();
 
-            writer.Close();
-
-            stopThread.Close();
-        }
-
-        private void RecordScreen()
-        {
-            var stopwatch = new Stopwatch();
-            var buffer = new byte[screenWidth * screenHeight * 4];
-
-            Task videoWriteTask = null;
-
-            var isFirstFrame = true;
-            var shotsTaken = 0;
-            var timeTillNextFrame = TimeSpan.Zero;
-            stopwatch.Start();
-
-            while (!stopThread.WaitOne(timeTillNextFrame))
-            {
-                GetScreenshot(buffer);
-                shotsTaken++;
-
-                // Wait for the previous frame is written
-                if (!isFirstFrame)
-                {
-                    videoWriteTask.Wait();
-                    videoFrameWritten.Set();
-                }
-                videoWriteTask = videoStream.WriteFrameAsync(true, buffer, 0, buffer.Length);               
-
-                timeTillNextFrame = TimeSpan.FromSeconds(shotsTaken / (double)writer.FramesPerSecond - stopwatch.Elapsed.TotalSeconds);
-                if (timeTillNextFrame < TimeSpan.Zero)
-                    timeTillNextFrame = TimeSpan.Zero;
-
-                isFirstFrame = false;
-            }
-
-            stopwatch.Stop();
-
-            // Wait for the last frame is written
-            if (!isFirstFrame)
-            {
-                videoWriteTask.Wait();
-            }
-        }
-
-        private void GetScreenshot(byte[] buffer)
-        {
-            using (var bitmap = new Bitmap(screenWidth, screenHeight))
-            using (var graphics = Graphics.FromImage(bitmap))
-            {
-                graphics.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(screenWidth, screenHeight));
-                var bits = bitmap.LockBits(new Rectangle(0, 0, screenWidth, screenHeight), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
-                Marshal.Copy(bits.Scan0, buffer, 0, buffer.Length);
-                bitmap.UnlockBits(bits);
-
-                // Should also capture the mouse cursor here, but skipping for simplicity
-                // For those who are interested, look at http://www.codeproject.com/Articles/12850/Capturing-the-Desktop-Screen-with-the-Mouse-Cursor
-            }
-        }
+        }      
     }
 }

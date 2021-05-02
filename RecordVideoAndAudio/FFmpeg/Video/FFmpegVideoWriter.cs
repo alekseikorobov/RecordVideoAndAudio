@@ -36,59 +36,59 @@ namespace Captura.FFmpeg
                 throw new FFmpegNotFoundException();
             }
 
-            //var nv12 = Args.ImageProvider.DummyFrame is INV12Frame;
+            var nv12 = false;// Args.ImageProvider.DummyFrame is INV12Frame;
 
-            //var settings = ServiceProvider.Get<FFmpegSettings>();
+            var settings = new FFmpegSettings();
 
-            //var w = Args.ImageProvider.Width;
-            //var h = Args.ImageProvider.Height;
+            var w = Args.ImageProvider.Width;
+            var h = Args.ImageProvider.Height;
 
-            //_videoBuffer = new byte[(int)(w * h * (nv12 ? 1.5 : 4))];
+            _videoBuffer = new byte[(int)(w * h * (nv12 ? 1.5 : 4))];
 
-            //Console.WriteLine($"Video Buffer Allocated: {_videoBuffer.Length}");
+            Console.WriteLine($"Video Buffer Allocated: {_videoBuffer.Length}");
 
-            //var videoPipeName = GetPipeName();
+            var videoPipeName = GetPipeName();
 
-            //var argsBuilder = new FFmpegArgsBuilder();
+            var argsBuilder = new FFmpegArgsBuilder();
 
-            //argsBuilder.AddInputPipe(videoPipeName)
-            //    .AddArg("thread_queue_size", 512)
-            //    .AddArg("framerate", Args.FrameRate)
-            //    .SetFormat("rawvideo")
-            //    .AddArg("pix_fmt", nv12 ? "nv12" : "rgb32")
-            //    .SetVideoSize(w, h);
+            argsBuilder.AddInputPipe(videoPipeName)
+                .AddArg("thread_queue_size", 512)
+                .AddArg("framerate", Args.FrameRate)
+                .SetFormat("rawvideo")
+                .AddArg("pix_fmt", nv12 ? "nv12" : "rgb32")
+                .SetVideoSize(w, h);
 
-            //var output = argsBuilder.AddOutputFile(Args.FileName)
-            //    .SetFrameRate(Args.FrameRate);
+            var output = argsBuilder.AddOutputFile(Args.FileName)
+                .SetFrameRate(Args.FrameRate);
 
-            //Args.VideoCodec.Apply(settings, Args, output);
-            
-            //if (settings.Resize)
-            //{
-            //    var width = settings.ResizeWidth;
-            //    var height = settings.ResizeHeight;
+            Args.VideoCodec.Apply(settings, Args, output);
 
-            //    if (width % 2 == 1)
-            //        ++width;
+            if (settings.Resize)
+            {
+                var width = settings.ResizeWidth;
+                var height = settings.ResizeHeight;
 
-            //    if (height % 2 == 1)
-            //        ++height;
+                if (width % 2 == 1)
+                    ++width;
 
-            //    output.AddArg("vf", $"scale={width}:{height}");
-            //}
+                if (height % 2 == 1)
+                    ++height;
+
+                output.AddArg("vf", $"scale={width}:{height}");
+            }
 
             if (Args.AudioProvider != null)
             {
                 var audioPipeName = GetPipeName();
 
-                //argsBuilder.AddInputPipe(audioPipeName)
-                //    .AddArg("thread_queue_size", 512)
-                //    .SetFormat("s16le")
-                //    .SetAudioCodec("pcm_s16le")
-                //    .SetAudioFrequency(Args.Frequency)
-                //    .SetAudioChannels(Args.Channels);
+                argsBuilder.AddInputPipe(audioPipeName)
+                    .AddArg("thread_queue_size", 512)
+                    .SetFormat("s16le")
+                    .SetAudioCodec("pcm_s16le")
+                    .SetAudioFrequency(Args.Frequency)
+                    .SetAudioChannels(Args.Channels);
 
-                //Args.VideoCodec.AudioArgsProvider(Args.AudioQuality, output);
+                Args.VideoCodec.AudioArgsProvider(Args.AudioQuality, output);
 
                 var wf = Args.AudioProvider.WaveFormat;
 
@@ -103,9 +103,9 @@ namespace Captura.FFmpeg
                 _audioPipe = new NamedPipeServerStream(audioPipeName, PipeDirection.Out, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 0, audioBufferSize);
             }
 
-            //_ffmpegIn = new NamedPipeServerStream(videoPipeName, PipeDirection.Out, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 0, _videoBuffer.Length);
+            _ffmpegIn = new NamedPipeServerStream(videoPipeName, PipeDirection.Out, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 0, _videoBuffer.Length);
 
-            //_ffmpegProcess = FFmpegService.StartFFmpeg(argsBuilder.GetArgs(), Args.FileName, out _);
+            _ffmpegProcess = FFmpegService.StartFFmpeg(argsBuilder.GetArgs(), Args.FileName, out _);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Captura.FFmpeg
 
             if (_ffmpegProcess.HasExited)
             {
-                throw new FFmpegException( _ffmpegProcess.ExitCode);
+                throw new FFmpegException(_ffmpegProcess.ExitCode);
             }
 
             if (_firstAudio)
@@ -208,7 +208,7 @@ namespace Captura.FFmpeg
                 Frame.Dispose();
                 throw new FFmpegException(_ffmpegProcess.ExitCode);
             }
-            
+
             if (_firstFrame)
             {
                 if (!_ffmpegIn.WaitForConnection(5000))
@@ -224,17 +224,17 @@ namespace Captura.FFmpeg
                 _lastFrameTask = Task.CompletedTask;
             }
 
-            //if (!(Frame is RepeatFrame))
-            //{
-            //    using (Frame)
-            //    {
-            //        if (Frame.Unwrap() is INV12Frame nv12Frame)
-            //        {
-            //            nv12Frame.CopyNV12To(_videoBuffer);
-            //        }
-            //        else Frame.CopyTo(_videoBuffer);
-            //    }
-            //}
+            if (!(Frame is RepeatFrame))
+            {
+                using (Frame)
+                {
+                    if (Frame.Unwrap() is INV12Frame nv12Frame)
+                    {
+                        nv12Frame.CopyNV12To(_videoBuffer);
+                    }
+                    else Frame.CopyTo(_videoBuffer);
+                }
+            }
 
             // Drop frames if semaphore cannot be acquired soon enough.
             // Frames are dropped mostly in the beginning of recording till atleast one audio frame is received.
@@ -244,7 +244,7 @@ namespace Captura.FFmpeg
                 _frameStreak = 0;
                 return;
             }
-            
+
             // Most of the drops happen in beginning of video, once that stops, sync can be done.
             if (!_initialStability)
             {

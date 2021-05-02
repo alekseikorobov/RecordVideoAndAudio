@@ -21,18 +21,18 @@ namespace RecordVideoAndAudio
             ///include to PATH
 
             recorderAudio = new RecorderAudio();
-            recorderVideo = new RecorderVideo();
+            recorderVideo = new RecorderVideo(recorderAudio);
 
             
             Assembly a = Assembly.GetExecutingAssembly();
             Stream st = a.GetManifestResourceStream("RecordVideoAndAudio.Icon.IconsPlay.ico");
             this.Icon = new Icon(st);
 
-            var list1 = recorderAudio.DevicesOut();
-            list1.ForEach(c => microphonesComboBox.Items.Add(c));
+            //var list1 = recorderAudio.DevicesOut();
+            //list1.ForEach(c => microphonesComboBox.Items.Add(c));
 
-            var list2 = recorderAudio.DevicesIn();
-            list2.ForEach(c => speakerComboBox.Items.Add(c));
+            //var list2 = recorderAudio.DevicesIn();
+            //list2.ForEach(c => speakerComboBox.Items.Add(c));
 
             ReadConfig();
 
@@ -57,10 +57,10 @@ namespace RecordVideoAndAudio
             if (config != null)
             {
                 resultFolderTextBox.Text = config.ResultFolder;
-                if (config.MicrophoneIndex.HasValue)
-                    microphonesComboBox.SelectedIndex = config.MicrophoneIndex.Value;
-                if (config.SpeakerIndex.HasValue)
-                    speakerComboBox.SelectedIndex = config.SpeakerIndex.Value;
+                //if (config.MicrophoneIndex.HasValue)
+                //    microphonesComboBox.SelectedIndex = config.MicrophoneIndex.Value;
+                //if (config.SpeakerIndex.HasValue)
+                //    speakerComboBox.SelectedIndex = config.SpeakerIndex.Value;
             }
         }
         private void SaveConfig()
@@ -106,7 +106,7 @@ namespace RecordVideoAndAudio
 
         bool isStart = false;
         TimeSpan timeRecord = new TimeSpan();
-        RecorderAudio recorderAudio;
+        private readonly RecorderAudio recorderAudio;
         private string fileName;
         private readonly RecorderVideo recorderVideo;
 
@@ -114,26 +114,29 @@ namespace RecordVideoAndAudio
         {
             if (!isStart)
             {
-
-                if (microphonesComboBox.SelectedIndex < 0 && speakerComboBox.SelectedIndex < 0)
+                if (microphonesComboBox.Visible && speakerComboBox.Visible)
                 {
-                    MessageBox.Show("Select divace for record");
-                    return;
-                }
+                    if (microphonesComboBox.SelectedIndex < 0 && speakerComboBox.SelectedIndex < 0)
+                    {
+                        MessageBox.Show("Select divace for record");
+                        return;
+                    }
 
-                //if (microphonesComboBox.SelectedIndex < 0)
-                //{
-                //    MessageBox.Show("Select divace microphone");
-                //    return;
-                //}
-                //if (speakerComboBox.SelectedIndex < 0)
-                //{
-                //    MessageBox.Show("Select divace speaker");
-                //    return;
-                //}
-                config.MicrophoneIndex = microphonesComboBox.SelectedIndex;
-                config.SpeakerIndex = speakerComboBox.SelectedIndex;
-                SaveConfig();
+
+                    //if (microphonesComboBox.SelectedIndex < 0)
+                    //{
+                    //    MessageBox.Show("Select divace microphone");
+                    //    return;
+                    //}
+                    //if (speakerComboBox.SelectedIndex < 0)
+                    //{
+                    //    MessageBox.Show("Select divace speaker");
+                    //    return;
+                    //}
+                    config.MicrophoneIndex = microphonesComboBox.SelectedIndex;
+                    config.SpeakerIndex = speakerComboBox.SelectedIndex;
+                    SaveConfig();
+                }
 
                 isStart = true;
                 this.startRecordButton.Enabled = false;
@@ -152,14 +155,18 @@ namespace RecordVideoAndAudio
                 fileName = Path.Combine(config.ResultFolder, $"record_{DateTime.Now:yyyyMMdd_HHmmss}");
                 try
                 {
-                    recorderAudio.StartRecording(fileName, microphonesComboBox.SelectedIndex,
-                        speakerComboBox.SelectedIndex);
+                    
 
                     if (!isOnlyAudioCheckBox.Checked)
                     {
                         var encoder = KnownFourCCs.Codecs.MotionJpeg;
                         var encodingQuality = 70;
-                        recorderVideo.StartRecord(fileName + "_video", encoder, encodingQuality);
+                        recorderVideo.StartRecord(fileName + "_video.mp4", encoder, encodingQuality);
+                    }
+                    else
+                    {
+                        recorderAudio.StartRecording(fileName, microphonesComboBox.SelectedIndex,
+                        speakerComboBox.SelectedIndex);
                     }
 
                     resultLabel.Text = "";
@@ -195,7 +202,7 @@ namespace RecordVideoAndAudio
                     {
                         recorderVideo.StopRecord();
 
-                        MixingAudioAndVideo(); 
+                        //MixingAudioAndVideo(); 
                     }
 
                     resultLabel.Text = "recorded - " + recorderAudio.FileName;

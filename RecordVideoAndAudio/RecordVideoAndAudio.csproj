@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MediaFoundation, Version=3.1.0.0, Culture=neutral, PublicKeyToken=36fa660e1d6ebf8d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediaFoundation.3.1.0\lib\MediaFoundation.dll</HintPath>
+    </Reference>
+    <Reference Include="MediaFoundation.Extension, Version=1.0.0.35224, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediaFoundation.3.1.0\lib\MediaFoundation.Extension.dll</HintPath>
+    </Reference>
     <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
@@ -46,6 +52,27 @@
     </Reference>
     <Reference Include="SharpAvi, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpAvi.2.1.2\lib\net45\SharpAvi.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D9, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D9.4.2.0\lib\net45\SharpDX.Direct3D9.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.MediaFoundation, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.MediaFoundation.4.2.0\lib\net45\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -67,6 +94,9 @@
     <Compile Include="AudioContracts\IAudioProvider.cs" />
     <Compile Include="AudioContracts\IAudioSource.cs" />
     <Compile Include="AudioContracts\IAudioWriterItem.cs" />
+    <Compile Include="Base\FrameExtensions.cs" />
+    <Compile Include="Base\IFrameWrapper.cs" />
+    <Compile Include="Base\IImagingSystem.cs" />
     <Compile Include="AudioContracts\WaveFormat\WaveFormat.cs" />
     <Compile Include="AudioContracts\WaveFormat\WaveFormatEncoding.cs" />
     <Compile Include="AudioFileWriter.cs" />
@@ -81,14 +111,26 @@
     <Compile Include="Audio\WaveFormatExtensions.cs" />
     <Compile Include="Base\IBinder.cs" />
     <Compile Include="Base\IBitmapFrame.cs" />
+    <Compile Include="Base\IBitmapImage.cs" />
+    <Compile Include="Base\IEditableFrame.cs" />
+    <Compile Include="Base\IImageProvider.cs" />
     <Compile Include="Base\ILocalizationProvider.cs" />
+    <Compile Include="Base\INV12Frame.cs" />
+    <Compile Include="Base\IOverlay.cs" />
+    <Compile Include="Base\IPlatformServices.cs" />
+    <Compile Include="Base\IRecorder.cs" />
+    <Compile Include="Base\IScreen.cs" />
     <Compile Include="Base\IVideoConverter.cs" />
     <Compile Include="Base\IVideoFileWriter.cs" />
+    <Compile Include="Base\IVideoItem.cs" />
     <Compile Include="Base\IVideoWriterItem.cs" />
     <Compile Include="Base\IVideoWriterProvider.cs" />
+    <Compile Include="Base\IWindow.cs" />
+    <Compile Include="Base\MouseOverlaySettings.cs" />
     <Compile Include="Base\NotifyPropertyChanged.cs" />
     <Compile Include="Base\PropertyStore.cs" />
     <Compile Include="Base\ProxySettings.cs" />
+    <Compile Include="Base\RepeatFrame.cs" />
     <Compile Include="Base\ServiceProvider.cs" />
     <Compile Include="Base\VideoConverterParams.cs" />
     <Compile Include="Base\VideoWriterArgs.cs" />
@@ -142,12 +184,83 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Native\DwmApi.cs" />
+    <Compile Include="Native\Enums\DrawIconExFlags.cs" />
+    <Compile Include="Native\Enums\FileOperationFlags.cs" />
+    <Compile Include="Native\Enums\FileOperationType.cs" />
+    <Compile Include="Native\Enums\GetWindowEnum.cs" />
+    <Compile Include="Native\Enums\GetWindowLongValue.cs" />
+    <Compile Include="Native\Enums\SetWindowPositionFlags.cs" />
+    <Compile Include="Native\Enums\WindowStyles.cs" />
+    <Compile Include="Native\EnumWindowsProc.cs" />
+    <Compile Include="Native\Gdi32.cs" />
+    <Compile Include="Native\Kernel32.cs" />
+    <Compile Include="Native\NativeExtensions.cs" />
+    <Compile Include="Native\Shell32.cs" />
+    <Compile Include="Native\Structs\CursorInfo.cs" />
+    <Compile Include="Native\Structs\IconInfo.cs" />
+    <Compile Include="Native\Structs\RECT.cs" />
+    <Compile Include="Native\Structs\ShFileOpStruct.cs" />
+    <Compile Include="Native\UnsafeBitmap.cs" />
+    <Compile Include="Native\User32.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecorderAudio_old.cs" />
     <Compile Include="RecorderAudio.cs" />
+    <Compile Include="RecorderVideo_old.cs" />
     <Compile Include="RecorderVideo.cs" />
+    <Compile Include="Scrina\FullScreenItem.cs" />
+    <Compile Include="Scrina\FullScreenSourceProvider.cs" />
+    <Compile Include="Scrina\IVideoSourceProvider.cs" />
+    <Compile Include="Scrina\MousePointerOverlay.cs" />
+    <Compile Include="Scrina\OverlayedImageProvider.cs" />
+    <Compile Include="Scrina\Recorder.cs" />
+    <Compile Include="Scrina\ScreenShot.cs" />
+    <Compile Include="Scrina\VideoSourceProviderBase.cs" />
     <Compile Include="SilentWaveProvider.cs" />
+    <Compile Include="Windows\DesktopDuplication\AcquireResult.cs" />
+    <Compile Include="Windows\DesktopDuplication\DeskDuplFullScreenImageProvider.cs" />
+    <Compile Include="Windows\DesktopDuplication\DeskDuplImageProvider.cs" />
+    <Compile Include="Windows\DesktopDuplication\DeskDuplOutputEntry.cs" />
+    <Compile Include="Windows\DesktopDuplication\DesktopDuplicator.cs" />
+    <Compile Include="Windows\DesktopDuplication\DuplCapture.cs" />
+    <Compile Include="Windows\DesktopDuplication\FrameGrabber.cs" />
+    <Compile Include="Windows\DesktopDuplication\FullScreenDesktopDuplicator.cs" />
+    <Compile Include="Windows\DesktopDuplication\MousePointer\ColorPointerShape.cs" />
+    <Compile Include="Windows\DesktopDuplication\MousePointer\DXMousePointer.cs" />
+    <Compile Include="Windows\DesktopDuplication\MousePointer\IPointerShape.cs" />
+    <Compile Include="Windows\DesktopDuplication\MousePointer\MaskedColorPointerShape.cs" />
+    <Compile Include="Windows\DesktopDuplication\MousePointer\MaskedPointerShape.cs" />
+    <Compile Include="Windows\DesktopDuplication\MousePointer\MonochromePointerShape.cs" />
+    <Compile Include="Windows\Imaging\Direct2D\D3D9PreviewAssister.cs" />
+    <Compile Include="Windows\Imaging\Direct2D\Direct2DEditor.cs" />
+    <Compile Include="Windows\Imaging\Direct2D\Direct2DEditorSession.cs" />
+    <Compile Include="Windows\Imaging\Direct2D\Direct2DFont.cs" />
+    <Compile Include="Windows\Imaging\Direct2D\Direct2DImage.cs" />
+    <Compile Include="Windows\Imaging\Direct2D\Texture2DFrame.cs" />
+    <Compile Include="Windows\Imaging\Drawing\DrawingFont.cs" />
+    <Compile Include="Windows\Imaging\Drawing\DrawingFrame.cs" />
+    <Compile Include="Windows\Imaging\Drawing\DrawingImage.cs" />
+    <Compile Include="Windows\Imaging\Drawing\DrawingImagingSystem.cs" />
+    <Compile Include="Windows\Imaging\Drawing\GraphicsBitmapLoader.cs" />
+    <Compile Include="Windows\Imaging\Drawing\GraphicsEditor.cs" />
+    <Compile Include="Windows\Imaging\Drawing\GraphicsExtensions.cs" />
+    <Compile Include="Windows\MediaFoundation\MfAudioItem.cs" />
+    <Compile Include="Windows\MediaFoundation\MfAudioWriter.cs" />
+    <Compile Include="Windows\MediaFoundation\MfColorConverter.cs" />
+    <Compile Include="Windows\MediaFoundation\MfItem.cs" />
+    <Compile Include="Windows\MediaFoundation\MfManager.cs" />
+    <Compile Include="Windows\MediaFoundation\MfWriter.cs" />
+    <Compile Include="Windows\MediaFoundation\MfWriterProvider.cs" />
+    <Compile Include="Windows\MediaFoundation\PackedLong.cs" />
+    <Compile Include="Windows\MediaFoundation\RateControlMode.cs" />
+    <Compile Include="Windows\MouseCursor.cs" />
+    <Compile Include="Windows\ScreenShot.cs" />
+    <Compile Include="Windows\ScreenWrapper.cs" />
+    <Compile Include="Windows\Window.cs" />
+    <Compile Include="Windows\WindowScreenShotBackdrop.cs" />
+    <Compile Include="Windows\WindowsModule.cs" />
+    <Compile Include="Windows\WindowsPlatformServices.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

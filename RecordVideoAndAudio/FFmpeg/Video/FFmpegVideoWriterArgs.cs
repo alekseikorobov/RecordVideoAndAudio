@@ -9,7 +9,7 @@ namespace Captura.FFmpeg
             return new FFmpegVideoWriterArgs
             {
                 FileName = Args.FileName,
-                //ImageProvider = Args.ImageProvider,
+                ImageProvider = Args.ImageProvider,
                 FrameRate = Args.FrameRate,
                 VideoQuality = Args.VideoQuality,
                 VideoCodec = VideoCodec,

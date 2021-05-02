@@ -1,4 +1,5 @@
 ﻿using Captura.Video;
+using Captura.Windows.MediaFoundation;
 
 namespace Captura.FFmpeg
 {
@@ -23,7 +24,8 @@ namespace Captura.FFmpeg
 
         public virtual IVideoFileWriter GetVideoFileWriter(VideoWriterArgs Args)
         {
-            return new FFmpegWriter(FFmpegVideoWriterArgs.FromVideoWriterArgs(Args, this));
+            var _device = new SharpDX.Direct3D11.Device(SharpDX.Direct3D.DriverType.Hardware, SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport);
+            return new MfWriter(Args, _device);
         }
 
         public override string ToString() => Name;

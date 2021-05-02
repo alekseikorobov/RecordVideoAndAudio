@@ -17,6 +17,7 @@ namespace RecordVideoAndAudio
         const string extention = ".mp3";
         public bool Startded { get; private set; } = false;
         public string FileName { get; private set; }
+        public IAudioProvider AudioProvider { get; private set; }
 
         public RecorderAudio()
         {
@@ -32,15 +33,14 @@ namespace RecordVideoAndAudio
         {
             if (!Startded)
             {
-                FileName = fileName;
-                _audioSource = new NAudioSource();
+                
 
-                if (!SetupAudioProvider(out var audioProvider))
+                if (!SetupAudioProvider(fileName))
                     return;
 
-                if (!InitAudioRecorder(audioProvider))
+                if (!InitAudioRecorder())
                 {
-                    audioProvider?.Dispose();
+                    AudioProvider?.Dispose();
 
                     return;
                 }
@@ -51,8 +51,11 @@ namespace RecordVideoAndAudio
             }
         }
 
-        bool SetupAudioProvider(out IAudioProvider AudioProvider)
+        public bool SetupAudioProvider(string fileName)
         {
+            FileName = fileName;
+            _audioSource = new NAudioSource();
+
             AudioProvider = null;
 
             try
@@ -70,7 +73,7 @@ namespace RecordVideoAndAudio
             return true;
         }
 
-        bool InitAudioRecorder(IAudioProvider AudioProvider)
+        bool InitAudioRecorder()
         {
             try
             {
@@ -132,7 +135,7 @@ namespace RecordVideoAndAudio
         
         public void StopRecording()
         {
-            _recorder.Dispose();
+            _recorder?.Dispose();
 
             Startded = false;
         }        
