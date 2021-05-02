@@ -27,6 +27,15 @@ namespace RecordVideoAndAudio
             screenHeight = Screen.PrimaryScreen.Bounds.Height;
             screenWidth = Screen.PrimaryScreen.Bounds.Width;
 
+            //var bounds = SystemInformation.VirtualScreen;
+
+            //screenWidth = bounds.Width;
+            //screenHeight = bounds.Height;
+
+            ////PointTransform = P => new Point(P.X - bounds.Left, P.Y - bounds.Top);
+
+
+
         }
 
         public void StartRecord(string fileName,
@@ -137,15 +146,19 @@ namespace RecordVideoAndAudio
         private void GetScreenshot(byte[] buffer)
         {
             using (var bitmap = new Bitmap(screenWidth, screenHeight))
-            using (var graphics = Graphics.FromImage(bitmap))
             {
-                graphics.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(screenWidth, screenHeight));
-                var bits = bitmap.LockBits(new Rectangle(0, 0, screenWidth, screenHeight), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
-                Marshal.Copy(bits.Scan0, buffer, 0, buffer.Length);
-                bitmap.UnlockBits(bits);
+                using (var graphics = Graphics.FromImage(bitmap))
+                {
+                    graphics.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(screenWidth, screenHeight));
 
-                // Should also capture the mouse cursor here, but skipping for simplicity
-                // For those who are interested, look at http://www.codeproject.com/Articles/12850/Capturing-the-Desktop-Screen-with-the-Mouse-Cursor
+                    Bitmap cursorBMP = ScreenshotCaptureWithMouse.ScreenCapture.CaptureScreen.CaptureCursor(out int cursorX, out int cursorY);
+                    var r = new Rectangle(cursorX, cursorY, cursorBMP.Width, cursorBMP.Height);
+                    graphics.DrawImage(cursorBMP, r);
+
+                    var bits = bitmap.LockBits(new Rectangle(0, 0, screenWidth, screenHeight), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
+                    Marshal.Copy(bits.Scan0, buffer, 0, buffer.Length);
+                    bitmap.UnlockBits(bits);
+                }
             }
         }
     }

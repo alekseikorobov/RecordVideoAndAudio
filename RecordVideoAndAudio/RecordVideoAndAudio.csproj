@@ -147,6 +147,9 @@
     <Compile Include="RecorderAudio_old.cs" />
     <Compile Include="RecorderAudio.cs" />
     <Compile Include="RecorderVideo.cs" />
+    <Compile Include="ScreenCapture\CaptureScreen.cs" />
+    <Compile Include="ScreenCapture\GDIStuff.cs" />
+    <Compile Include="ScreenCapture\Win32Stuff.cs" />
     <Compile Include="SilentWaveProvider.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
