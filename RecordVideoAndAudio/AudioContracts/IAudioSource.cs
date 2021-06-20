@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.CoreAudioApi;
+using System;
 using System.Collections.Generic;
 
 namespace Captura.Audio
@@ -15,7 +16,7 @@ namespace Captura.Audio
 
         IAudioItem DefaultSpeaker { get; }
 
-        IAudioProvider GetAudioProvider(IAudioItem Microphone, IAudioItem Speaker);
+        IAudioProvider GetAudioProvider(MMDevice Microphone, MMDevice Speaker);
         IAudioProvider GetAudioProviderDefault();
 
         event Action DevicesUpdated;

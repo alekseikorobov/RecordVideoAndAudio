@@ -98,9 +98,11 @@ namespace Captura.Audio
                         new WasapiLoopbackCaptureProvider(DefaultSpeaker.Device));
         }
 
-        public IAudioProvider GetAudioProvider(IAudioItem Microphone, IAudioItem Speaker)
+        public IAudioProvider GetAudioProvider(MMDevice Microphone, MMDevice Speaker)
         {
-            throw new NotImplementedException();
+            return new MixedAudioProvider(
+                        new WasapiCaptureProvider(DefaultMicrophone.Device),
+                        new WasapiLoopbackCaptureProvider(DefaultSpeaker.Device));
         }
     }
 }

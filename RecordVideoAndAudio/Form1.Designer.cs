@@ -47,13 +47,17 @@
             this.speakerLabel = new System.Windows.Forms.Label();
             this.speakerComboBox = new System.Windows.Forms.ComboBox();
             this.isOnlyAudioCheckBox = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.progressBarMicrophone = new System.Windows.Forms.ProgressBar();
+            this.progressBarSpeaker = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // startRecordButton
             // 
             this.startRecordButton.BackColor = System.Drawing.Color.PaleGreen;
             this.startRecordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.startRecordButton.Location = new System.Drawing.Point(12, 88);
+            this.startRecordButton.Location = new System.Drawing.Point(12, 142);
             this.startRecordButton.Name = "startRecordButton";
             this.startRecordButton.Size = new System.Drawing.Size(123, 43);
             this.startRecordButton.TabIndex = 0;
@@ -66,7 +70,7 @@
             this.stopRecordButton.BackColor = System.Drawing.Color.Gray;
             this.stopRecordButton.Enabled = false;
             this.stopRecordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stopRecordButton.Location = new System.Drawing.Point(141, 88);
+            this.stopRecordButton.Location = new System.Drawing.Point(141, 142);
             this.stopRecordButton.Margin = new System.Windows.Forms.Padding(0);
             this.stopRecordButton.Name = "stopRecordButton";
             this.stopRecordButton.Size = new System.Drawing.Size(123, 43);
@@ -78,7 +82,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 138);
+            this.label1.Location = new System.Drawing.Point(12, 192);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(33, 13);
             this.label1.TabIndex = 2;
@@ -87,7 +91,7 @@
             // timeValueLabel
             // 
             this.timeValueLabel.AutoSize = true;
-            this.timeValueLabel.Location = new System.Drawing.Point(51, 138);
+            this.timeValueLabel.Location = new System.Drawing.Point(51, 192);
             this.timeValueLabel.Name = "timeValueLabel";
             this.timeValueLabel.Size = new System.Drawing.Size(49, 13);
             this.timeValueLabel.TabIndex = 3;
@@ -101,7 +105,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 155);
+            this.label2.Location = new System.Drawing.Point(14, 209);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 4;
@@ -110,7 +114,7 @@
             // resultLabel
             // 
             this.resultLabel.AutoSize = true;
-            this.resultLabel.Location = new System.Drawing.Point(54, 155);
+            this.resultLabel.Location = new System.Drawing.Point(54, 209);
             this.resultLabel.Name = "resultLabel";
             this.resultLabel.Size = new System.Drawing.Size(0, 13);
             this.resultLabel.TabIndex = 5;
@@ -124,7 +128,6 @@
             this.microphonesComboBox.Name = "microphonesComboBox";
             this.microphonesComboBox.Size = new System.Drawing.Size(276, 21);
             this.microphonesComboBox.TabIndex = 6;
-            this.microphonesComboBox.Visible = false;
             // 
             // microphoneLabel
             // 
@@ -134,13 +137,12 @@
             this.microphoneLabel.Size = new System.Drawing.Size(63, 13);
             this.microphoneLabel.TabIndex = 7;
             this.microphoneLabel.Text = "Microphone";
-            this.microphoneLabel.Visible = false;
             // 
             // resultFolderTextBox
             // 
             this.resultFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.resultFolderTextBox.Location = new System.Drawing.Point(12, 217);
+            this.resultFolderTextBox.Location = new System.Drawing.Point(12, 259);
             this.resultFolderTextBox.Name = "resultFolderTextBox";
             this.resultFolderTextBox.Size = new System.Drawing.Size(351, 20);
             this.resultFolderTextBox.TabIndex = 8;
@@ -150,7 +152,7 @@
             // 
             this.resultFolderLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.resultFolderLabel.AutoSize = true;
-            this.resultFolderLabel.Location = new System.Drawing.Point(13, 198);
+            this.resultFolderLabel.Location = new System.Drawing.Point(13, 240);
             this.resultFolderLabel.Name = "resultFolderLabel";
             this.resultFolderLabel.Size = new System.Drawing.Size(66, 13);
             this.resultFolderLabel.TabIndex = 9;
@@ -160,7 +162,7 @@
             // 
             this.StatisticLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.StatisticLabel.AutoSize = true;
-            this.StatisticLabel.Location = new System.Drawing.Point(12, 244);
+            this.StatisticLabel.Location = new System.Drawing.Point(12, 286);
             this.StatisticLabel.Name = "StatisticLabel";
             this.StatisticLabel.Size = new System.Drawing.Size(47, 13);
             this.StatisticLabel.TabIndex = 10;
@@ -170,7 +172,7 @@
             // 
             this.statisticValueLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.statisticValueLabel.AutoSize = true;
-            this.statisticValueLabel.Location = new System.Drawing.Point(66, 244);
+            this.statisticValueLabel.Location = new System.Drawing.Point(66, 286);
             this.statisticValueLabel.Name = "statisticValueLabel";
             this.statisticValueLabel.Size = new System.Drawing.Size(0, 13);
             this.statisticValueLabel.TabIndex = 11;
@@ -180,7 +182,7 @@
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.saveButton.Enabled = false;
             this.saveButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(200)));
-            this.saveButton.Location = new System.Drawing.Point(293, 189);
+            this.saveButton.Location = new System.Drawing.Point(293, 231);
             this.saveButton.Margin = new System.Windows.Forms.Padding(0);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(69, 21);
@@ -197,7 +199,6 @@
             this.speakerLabel.Size = new System.Drawing.Size(47, 13);
             this.speakerLabel.TabIndex = 14;
             this.speakerLabel.Text = "Speaker";
-            this.speakerLabel.Visible = false;
             // 
             // speakerComboBox
             // 
@@ -206,25 +207,64 @@
             this.speakerComboBox.FormattingEnabled = true;
             this.speakerComboBox.Location = new System.Drawing.Point(87, 39);
             this.speakerComboBox.Name = "speakerComboBox";
-            this.speakerComboBox.Size = new System.Drawing.Size(275, 21);
+            this.speakerComboBox.Size = new System.Drawing.Size(276, 21);
             this.speakerComboBox.TabIndex = 13;
-            this.speakerComboBox.Visible = false;
             // 
             // isOnlyAudioCheckBox
             // 
             this.isOnlyAudioCheckBox.AutoSize = true;
-            this.isOnlyAudioCheckBox.Location = new System.Drawing.Point(12, 66);
+            this.isOnlyAudioCheckBox.Location = new System.Drawing.Point(12, 120);
             this.isOnlyAudioCheckBox.Name = "isOnlyAudioCheckBox";
             this.isOnlyAudioCheckBox.Size = new System.Drawing.Size(77, 17);
             this.isOnlyAudioCheckBox.TabIndex = 15;
             this.isOnlyAudioCheckBox.Text = "Only Audio";
             this.isOnlyAudioCheckBox.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 84);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(47, 13);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "Speaker";
+            this.label3.Visible = false;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 65);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(63, 13);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "Microphone";
+            this.label4.Visible = false;
+            // 
+            // progressBarMicrophone
+            // 
+            this.progressBarMicrophone.Location = new System.Drawing.Point(87, 67);
+            this.progressBarMicrophone.Name = "progressBarMicrophone";
+            this.progressBarMicrophone.Size = new System.Drawing.Size(276, 11);
+            this.progressBarMicrophone.TabIndex = 18;
+            this.progressBarMicrophone.Visible = false;
+            // 
+            // progressBarSpeaker
+            // 
+            this.progressBarSpeaker.Location = new System.Drawing.Point(87, 86);
+            this.progressBarSpeaker.Name = "progressBarSpeaker";
+            this.progressBarSpeaker.Size = new System.Drawing.Size(276, 11);
+            this.progressBarSpeaker.TabIndex = 19;
+            this.progressBarSpeaker.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(382, 264);
+            this.ClientSize = new System.Drawing.Size(382, 306);
+            this.Controls.Add(this.progressBarSpeaker);
+            this.Controls.Add(this.progressBarMicrophone);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.isOnlyAudioCheckBox);
             this.Controls.Add(this.speakerLabel);
             this.Controls.Add(this.speakerComboBox);
@@ -268,6 +308,10 @@
         private System.Windows.Forms.Label speakerLabel;
         private System.Windows.Forms.ComboBox speakerComboBox;
         private System.Windows.Forms.CheckBox isOnlyAudioCheckBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ProgressBar progressBarMicrophone;
+        private System.Windows.Forms.ProgressBar progressBarSpeaker;
     }
 }
 

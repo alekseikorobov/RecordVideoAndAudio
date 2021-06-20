@@ -18,8 +18,26 @@ namespace RecordVideoAndAudio
         public bool Startded { get; private set; } = false;
         public string FileName { get; private set; }
 
+
+        MMDeviceEnumerator _deviceEnumerator = new MMDeviceEnumerator();
+        NAudioNotificationClient _notificationClient = new NAudioNotificationClient();
+        public event Action DevicesUpdated;
+
         public RecorderAudio()
         {
+            _notificationClient.DevicesUpdated += () => DevicesUpdated?.Invoke();
+
+            _deviceEnumerator.RegisterEndpointNotificationCallback(_notificationClient);
+
+            _devicesIn = _deviceEnumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
+            _devicesOut = _deviceEnumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
+
+            //foreach (var device in devices)
+            //{
+            //    new NAudioItem(device, false);
+            //}
+
+
         }
         IAudioSource _audioSource;
         /// <summary>
@@ -28,14 +46,14 @@ namespace RecordVideoAndAudio
         /// <param name="fileName"></param>
         /// <param name="inputDeviceIndex">microphone</param>
         /// <param name="outputDeviceIndex">speaker</param>
-        public void StartRecording(String fileName, int inputDeviceIndex, int outputDeviceIndex)
+        public void StartRecording(String fileName, string inputDeviceName, string outputDeviceName)
         {
             if (!Startded)
             {
                 FileName = fileName;
                 _audioSource = new NAudioSource();
 
-                if (!SetupAudioProvider(out var audioProvider))
+                if (!SetupAudioProvider(inputDeviceName, outputDeviceName, out var audioProvider))
                     return;
 
                 if (!InitAudioRecorder(audioProvider))
@@ -51,14 +69,22 @@ namespace RecordVideoAndAudio
             }
         }
 
-        bool SetupAudioProvider(out IAudioProvider AudioProvider)
+        bool SetupAudioProvider(string inputDeviceName, string outputDeviceName, out IAudioProvider AudioProvider)
         {
             AudioProvider = null;
 
             try
             {
-                    AudioProvider = _audioSource.GetAudioProviderDefault();
-                
+                var microphone = GetDeviceInByName(inputDeviceName);
+                if (microphone == null)
+                    throw new ArgumentNullException(nameof(microphone));
+                var speaker = GetDeviceOutByName(outputDeviceName);
+                if (speaker == null)
+                    throw new ArgumentNullException(nameof(speaker));
+
+                AudioProvider = _audioSource.GetAudioProvider(microphone, speaker);
+                //AudioProvider = _audioSource.GetAudioProviderDefault();
+
             }
             catch (Exception e)
             {
@@ -106,30 +132,50 @@ namespace RecordVideoAndAudio
         public List<string> DevicesOut()
         {
             List<string> list = new List<string>();
-            for (int waveInDevice = 0; waveInDevice < WaveIn.DeviceCount; waveInDevice++)
+            //for (int waveInDevice = 0; waveInDevice < WaveIn.DeviceCount; waveInDevice++)
+            //{
+            //    WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(waveInDevice);
+            //    list.Add($"{waveInDevice} - {deviceInfo.ProductName}, {deviceInfo.Channels}");
+            //}
+            foreach (var item in _devicesIn)
             {
-                WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(waveInDevice);
-                list.Add($"{waveInDevice} - {deviceInfo.ProductName}, {deviceInfo.Channels}");
+                list.Add($"{item.FriendlyName}");
             }
             return list;
         }
-        MMDeviceCollection _devices;
+        private readonly MMDeviceCollection _devicesIn;
+        private readonly MMDeviceCollection _devicesOut;
         private IRecorder _recorder;
 
         public List<string> DevicesIn()
         {
             List<string> list = new List<string>();
 
-            _devices = new MMDeviceEnumerator()
-                .EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
-
-            foreach (var item in _devices)
+            foreach (var item in _devicesOut)
             {
-                list.Add($"{item.DeviceFriendlyName} - {item.FriendlyName}");
+                list.Add($"{item.FriendlyName}");
             }
             return list;
         }
-        
+        public MMDevice GetDeviceOutByName(string name)
+        {
+            foreach (var item in _devicesOut)
+            {
+                if (item.FriendlyName == name)
+                    return item;
+            }
+            return null;
+        }
+        public MMDevice GetDeviceInByName(string name)
+        {
+            foreach (var item in _devicesIn)
+            {
+                if (item.FriendlyName == name)
+                    return item;
+            }
+            return null;
+        }
+
         public void StopRecording()
         {
             _recorder.Dispose();

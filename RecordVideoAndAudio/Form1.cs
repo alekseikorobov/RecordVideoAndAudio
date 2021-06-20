@@ -41,6 +41,8 @@ namespace RecordVideoAndAudio
                 resultFolderTextBox.Text = Path.Combine(Environment.CurrentDirectory, "Records");
                 config = new Config
                 {
+                    MicrophoneName = (string)microphonesComboBox.SelectedItem,
+                    SpeakerName = (string)speakerComboBox.SelectedItem,
                     ResultFolder = resultFolderTextBox.Text
                 };
             }
@@ -57,10 +59,10 @@ namespace RecordVideoAndAudio
             if (config != null)
             {
                 resultFolderTextBox.Text = config.ResultFolder;
-                if (config.MicrophoneIndex.HasValue)
-                    microphonesComboBox.SelectedIndex = config.MicrophoneIndex.Value;
-                if (config.SpeakerIndex.HasValue)
-                    speakerComboBox.SelectedIndex = config.SpeakerIndex.Value;
+                if (!string.IsNullOrEmpty(config.MicrophoneName))
+                    microphonesComboBox.SelectedItem = config.MicrophoneName;
+                if (!string.IsNullOrEmpty(config.SpeakerName))
+                    speakerComboBox.SelectedItem = config.SpeakerName;
             }
         }
         private void SaveConfig()
@@ -123,20 +125,20 @@ namespace RecordVideoAndAudio
                     }
                 }
 
-                //if (microphonesComboBox.SelectedIndex < 0)
-                //{
-                //    MessageBox.Show("Select divace microphone");
-                //    return;
-                //}
-                //if (speakerComboBox.SelectedIndex < 0)
-                //{
-                //    MessageBox.Show("Select divace speaker");
-                //    return;
-                //}
+                if (microphonesComboBox.Visible && microphonesComboBox.SelectedIndex < 0)
+                {
+                    MessageBox.Show("Select divace microphone");
+                    return;
+                }
+                if (speakerComboBox.Visible &&  speakerComboBox.SelectedIndex < 0)
+                {
+                    MessageBox.Show("Select divace speaker");
+                    return;
+                }
                 if (microphonesComboBox.Visible && speakerComboBox.Visible)
                 {
-                    config.MicrophoneIndex = microphonesComboBox.SelectedIndex;
-                    config.SpeakerIndex = speakerComboBox.SelectedIndex;
+                    config.MicrophoneName = (string)microphonesComboBox.SelectedItem;
+                    config.SpeakerName = (string)speakerComboBox.SelectedItem;
                     SaveConfig();
                 }
 
@@ -156,8 +158,8 @@ namespace RecordVideoAndAudio
                 fileName = Path.Combine(config.ResultFolder, $"record_{DateTime.Now:yyyyMMdd_HHmmss}");
                 try
                 {
-                    recorderAudio.StartRecording(fileName, microphonesComboBox.SelectedIndex,
-                        speakerComboBox.SelectedIndex);
+                    recorderAudio.StartRecording(fileName, (string)microphonesComboBox.SelectedItem,
+                        (string)speakerComboBox.SelectedItem);
 
                     if (!isOnlyAudioCheckBox.Checked)
                     {
