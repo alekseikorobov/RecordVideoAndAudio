@@ -53,7 +53,42 @@ namespace ScreenshotCaptureWithMouse.ScreenCapture
 
         }
 
-
+        public static Icon CaptureCursorIcon(out int x, out int y)
+        {
+            IntPtr hicon;
+            Win32Stuff.CURSORINFO ci = new Win32Stuff.CURSORINFO();
+            Win32Stuff.ICONINFO icInfo;
+            ci.cbSize = Marshal.SizeOf(ci);
+            if (Win32Stuff.GetCursorInfo(out ci))
+            {
+                hicon = Win32Stuff.CopyIcon(ci.hCursor);
+                if (Win32Stuff.GetIconInfo(hicon, out icInfo))
+                {
+                    x = ci.ptScreenPos.x - icInfo.xHotspot;
+                    y = ci.ptScreenPos.y - icInfo.yHotspot;                    
+                    try
+                    {
+                        return Icon.FromHandle(hicon);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message);
+                        return null;
+                    }
+                }
+                else
+                {
+                    x = ci.ptScreenPos.x;
+                    y = ci.ptScreenPos.y;
+                }
+            }
+            else
+            {
+                x = 0;
+                y = 0;
+            }
+            return null;
+        }
         public static Bitmap CaptureCursor(out int x, out int y)
         {
             Bitmap bmp;

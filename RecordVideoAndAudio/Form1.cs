@@ -23,7 +23,7 @@ namespace RecordVideoAndAudio
             recorderAudio = new RecorderAudio();
             recorderVideo = new RecorderVideo();
 
-            
+
             Assembly a = Assembly.GetExecutingAssembly();
             Stream st = a.GetManifestResourceStream("RecordVideoAndAudio.Icon.IconsPlay.ico");
             this.Icon = new Icon(st);
@@ -114,11 +114,13 @@ namespace RecordVideoAndAudio
         {
             if (!isStart)
             {
-
-                if (microphonesComboBox.SelectedIndex < 0 && speakerComboBox.SelectedIndex < 0)
+                if (microphonesComboBox.Visible && speakerComboBox.Visible)
                 {
-                    MessageBox.Show("Select divace for record");
-                    return;
+                    if (microphonesComboBox.SelectedIndex < 0 && speakerComboBox.SelectedIndex < 0)
+                    {
+                        MessageBox.Show("Select divace for record");
+                        return;
+                    }
                 }
 
                 //if (microphonesComboBox.SelectedIndex < 0)
@@ -131,9 +133,12 @@ namespace RecordVideoAndAudio
                 //    MessageBox.Show("Select divace speaker");
                 //    return;
                 //}
-                config.MicrophoneIndex = microphonesComboBox.SelectedIndex;
-                config.SpeakerIndex = speakerComboBox.SelectedIndex;
-                SaveConfig();
+                if (microphonesComboBox.Visible && speakerComboBox.Visible)
+                {
+                    config.MicrophoneIndex = microphonesComboBox.SelectedIndex;
+                    config.SpeakerIndex = speakerComboBox.SelectedIndex;
+                    SaveConfig();
+                }
 
                 isStart = true;
                 this.startRecordButton.Enabled = false;
@@ -141,13 +146,12 @@ namespace RecordVideoAndAudio
                 this.stopRecordButton.Enabled = true;
                 stopRecordButton.BackColor = Color.LightCoral;
                 isOnlyAudioCheckBox.Enabled = false;
-
-                Assembly a = Assembly.GetExecutingAssembly();
-                Stream st = a.GetManifestResourceStream("RecordVideoAndAudio.Icon.IconRecording.ico");
-                this.Icon = new Icon(st);
+                
+                
+                this.Icon = Properties.Resources.IconRecording;
 
                 timeRecord = new TimeSpan();
-                timer1.Start();                
+                timer1.Start();
 
                 fileName = Path.Combine(config.ResultFolder, $"record_{DateTime.Now:yyyyMMdd_HHmmss}");
                 try
@@ -183,28 +187,19 @@ namespace RecordVideoAndAudio
                 isOnlyAudioCheckBox.Enabled = true;
                 timer1.Stop();
 
-                Assembly a = Assembly.GetExecutingAssembly();
-                Stream st = a.GetManifestResourceStream("RecordVideoAndAudio.Icon.IconsPlay.ico");
-                this.Icon = new Icon(st);
+                this.Icon = Properties.Resources.IconsPlay;
 
-                try
+                recorderAudio.StopRecording();
+
+                if (!isOnlyAudioCheckBox.Checked)
                 {
-                    recorderAudio.StopRecording();
+                    recorderVideo.StopRecord();
 
-                    if (!isOnlyAudioCheckBox.Checked)
-                    {
-                        recorderVideo.StopRecord();
-
-                        MixingAudioAndVideo(); 
-                    }
-
-                    resultLabel.Text = "recorded - " + recorderAudio.FileName;
-                    UpdateStatistic();
+                    MixingAudioAndVideo();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+
+                resultLabel.Text = "recorded - " + recorderAudio.FileName;
+                UpdateStatistic();
             }
         }
         private void MixingAudioAndVideo()

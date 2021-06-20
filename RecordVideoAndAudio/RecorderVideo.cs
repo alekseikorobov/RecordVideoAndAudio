@@ -91,7 +91,7 @@ namespace RecordVideoAndAudio
             }
         }
 
-        
+
         public void StopRecord()
         {
             stopThread.Set();
@@ -116,7 +116,14 @@ namespace RecordVideoAndAudio
 
             while (!stopThread.WaitOne(timeTillNextFrame))
             {
-                GetScreenshot(buffer);
+                try
+                {
+                    GetScreenshot(buffer);
+                }
+                catch (Exception)
+                {
+                    GetScreenshotEmpty(buffer);
+                }
                 shotsTaken++;
 
                 // Wait for the previous frame is written
@@ -125,7 +132,7 @@ namespace RecordVideoAndAudio
                     videoWriteTask.Wait();
                     videoFrameWritten.Set();
                 }
-                videoWriteTask = videoStream.WriteFrameAsync(true, buffer, 0, buffer.Length);               
+                videoWriteTask = videoStream.WriteFrameAsync(true, buffer, 0, buffer.Length);
 
                 timeTillNextFrame = TimeSpan.FromSeconds(shotsTaken / (double)writer.FramesPerSecond - stopwatch.Elapsed.TotalSeconds);
                 if (timeTillNextFrame < TimeSpan.Zero)
@@ -151,9 +158,36 @@ namespace RecordVideoAndAudio
                 {
                     graphics.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(screenWidth, screenHeight));
 
-                    Bitmap cursorBMP = ScreenshotCaptureWithMouse.ScreenCapture.CaptureScreen.CaptureCursor(out int cursorX, out int cursorY);
-                    var r = new Rectangle(cursorX, cursorY, cursorBMP.Width, cursorBMP.Height);
-                    graphics.DrawImage(cursorBMP, r);
+                    var icon = ScreenshotCaptureWithMouse.ScreenCapture.CaptureScreen.CaptureCursorIcon(out int cursorX, out int cursorY);
+                    if (icon != null)
+                    {
+                        try
+                        {
+                            graphics.DrawIcon(icon, cursorX, cursorY);
+                        }
+                        catch (Exception)
+                        {
+                            graphics.DrawEllipse(new Pen(Color.White), cursorX, cursorY, 10, 10);
+                        }
+                    }
+                    else
+                    {
+                        graphics.DrawEllipse(new Pen(Color.White), cursorX, cursorY, 10, 10);
+                    }
+
+                    var bits = bitmap.LockBits(new Rectangle(0, 0, screenWidth, screenHeight), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
+                    Marshal.Copy(bits.Scan0, buffer, 0, buffer.Length);
+                    bitmap.UnlockBits(bits);
+                }
+            }
+        }
+        private void GetScreenshotEmpty(byte[] buffer)
+        {
+            using (var bitmap = new Bitmap(screenWidth, screenHeight))
+            {
+                using (var graphics = Graphics.FromImage(bitmap))
+                {
+                    graphics.DrawRectangle(new Pen(Color.White), 0, 0, screenWidth, screenHeight);
 
                     var bits = bitmap.LockBits(new Rectangle(0, 0, screenWidth, screenHeight), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
                     Marshal.Copy(bits.Scan0, buffer, 0, buffer.Length);
