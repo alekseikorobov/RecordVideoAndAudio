@@ -29,8 +29,7 @@ namespace RecordVideoAndAudio
 
             _deviceEnumerator.RegisterEndpointNotificationCallback(_notificationClient);
 
-            _devicesIn = _deviceEnumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
-            _devicesOut = _deviceEnumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
+            
 
             //foreach (var device in devices)
             //{
@@ -137,19 +136,23 @@ namespace RecordVideoAndAudio
             //    WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(waveInDevice);
             //    list.Add($"{waveInDevice} - {deviceInfo.ProductName}, {deviceInfo.Channels}");
             //}
+            _devicesIn = _deviceEnumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
+            
             foreach (var item in _devicesIn)
             {
                 list.Add($"{item.FriendlyName}");
             }
             return list;
         }
-        private readonly MMDeviceCollection _devicesIn;
-        private readonly MMDeviceCollection _devicesOut;
+        private MMDeviceCollection _devicesIn;
+        private MMDeviceCollection _devicesOut;
         private IRecorder _recorder;
 
         public List<string> DevicesIn()
         {
             List<string> list = new List<string>();
+
+            _devicesOut = _deviceEnumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
 
             foreach (var item in _devicesOut)
             {

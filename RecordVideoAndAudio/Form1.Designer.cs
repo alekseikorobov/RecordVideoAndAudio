@@ -128,6 +128,7 @@
             this.microphonesComboBox.Name = "microphonesComboBox";
             this.microphonesComboBox.Size = new System.Drawing.Size(276, 21);
             this.microphonesComboBox.TabIndex = 6;
+            this.microphonesComboBox.SelectedIndexChanged += new System.EventHandler(this.microphonesComboBox_SelectedIndexChanged);
             // 
             // microphoneLabel
             // 
@@ -209,6 +210,7 @@
             this.speakerComboBox.Name = "speakerComboBox";
             this.speakerComboBox.Size = new System.Drawing.Size(276, 21);
             this.speakerComboBox.TabIndex = 13;
+            this.speakerComboBox.SelectedIndexChanged += new System.EventHandler(this.speakerComboBox_SelectedIndexChanged);
             // 
             // isOnlyAudioCheckBox
             // 
@@ -228,7 +230,6 @@
             this.label3.Size = new System.Drawing.Size(47, 13);
             this.label3.TabIndex = 17;
             this.label3.Text = "Speaker";
-            this.label3.Visible = false;
             // 
             // label4
             // 
@@ -238,7 +239,6 @@
             this.label4.Size = new System.Drawing.Size(63, 13);
             this.label4.TabIndex = 16;
             this.label4.Text = "Microphone";
-            this.label4.Visible = false;
             // 
             // progressBarMicrophone
             // 
@@ -246,7 +246,6 @@
             this.progressBarMicrophone.Name = "progressBarMicrophone";
             this.progressBarMicrophone.Size = new System.Drawing.Size(276, 11);
             this.progressBarMicrophone.TabIndex = 18;
-            this.progressBarMicrophone.Visible = false;
             // 
             // progressBarSpeaker
             // 
@@ -254,7 +253,6 @@
             this.progressBarSpeaker.Name = "progressBarSpeaker";
             this.progressBarSpeaker.Size = new System.Drawing.Size(276, 11);
             this.progressBarSpeaker.TabIndex = 19;
-            this.progressBarSpeaker.Visible = false;
             // 
             // Form1
             // 
@@ -284,6 +282,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Record Video And Audio";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -298,7 +297,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label resultLabel;
-        private System.Windows.Forms.ComboBox microphonesComboBox;
         private System.Windows.Forms.Label microphoneLabel;
         private System.Windows.Forms.TextBox resultFolderTextBox;
         private System.Windows.Forms.Label resultFolderLabel;
@@ -306,12 +304,13 @@
         private System.Windows.Forms.Label statisticValueLabel;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Label speakerLabel;
-        private System.Windows.Forms.ComboBox speakerComboBox;
         private System.Windows.Forms.CheckBox isOnlyAudioCheckBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ProgressBar progressBarMicrophone;
-        private System.Windows.Forms.ProgressBar progressBarSpeaker;
+        public System.Windows.Forms.ComboBox microphonesComboBox;
+        public System.Windows.Forms.ComboBox speakerComboBox;
+        public System.Windows.Forms.ProgressBar progressBarMicrophone;
+        public System.Windows.Forms.ProgressBar progressBarSpeaker;
     }
 }
 

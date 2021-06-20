@@ -20,36 +20,40 @@ namespace RecordVideoAndAudio
             ///install ffmpeg-N-99919-g5bb313e723-win64-gpl-shared
             ///include to PATH
 
-            recorderAudio = new RecorderAudio();
-            recorderVideo = new RecorderVideo();
-
-
-            Assembly a = Assembly.GetExecutingAssembly();
-            Stream st = a.GetManifestResourceStream("RecordVideoAndAudio.Icon.IconsPlay.ico");
-            this.Icon = new Icon(st);
-
-            var list1 = recorderAudio.DevicesOut();
-            list1.ForEach(c => microphonesComboBox.Items.Add(c));
-
-            var list2 = recorderAudio.DevicesIn();
-            list2.ForEach(c => speakerComboBox.Items.Add(c));
-
-            ReadConfig();
-
-            if (string.IsNullOrEmpty(resultFolderTextBox.Text))
-            {
-                resultFolderTextBox.Text = Path.Combine(Environment.CurrentDirectory, "Records");
-                config = new Config
-                {
-                    MicrophoneName = (string)microphonesComboBox.SelectedItem,
-                    SpeakerName = (string)speakerComboBox.SelectedItem,
-                    ResultFolder = resultFolderTextBox.Text
-                };
-            }
-            Directory.CreateDirectory(resultFolderTextBox.Text);
-
-            UpdateStatistic();
+            
         }
+
+        private void RecorderAudio_DevicesUpdated()
+        {
+            microphonesComboBox.Invoke((MethodInvoker)delegate {
+                microphonesComboBox.Items.Clear();
+
+                var list1 = recorderAudio.DevicesOut();
+                list1.ForEach(c => microphonesComboBox.Items.Add(c));
+            });
+
+            speakerComboBox.Invoke((MethodInvoker)delegate {
+                speakerComboBox.Items.Clear();
+                var list2 = recorderAudio.DevicesIn();
+                list2.ForEach(c => speakerComboBox.Items.Add(c));
+            });
+        }
+
+        private void UpdateListener()
+        {
+            if (microphonesComboBox.SelectedItem != null
+                && speakerComboBox.SelectedItem != null)
+            {
+                if (listener == null)
+                    listener = new ListenerDivice(this);
+                else
+                    listener.StopListeningForPeakLevel();
+
+                listener.StartListener();
+            }
+        }
+
+        ListenerDivice listener;
         Config config;
         private void ReadConfig()
         {
@@ -108,9 +112,9 @@ namespace RecordVideoAndAudio
 
         bool isStart = false;
         TimeSpan timeRecord = new TimeSpan();
-        RecorderAudio recorderAudio;
+        public RecorderAudio recorderAudio;
         private string fileName;
-        private readonly RecorderVideo recorderVideo;
+        private RecorderVideo recorderVideo;
 
         private void startRecordButton_Click(object sender, EventArgs e)
         {
@@ -262,6 +266,50 @@ namespace RecordVideoAndAudio
             SaveConfig();
             UpdateStatistic();
             saveButton.Enabled = false;
+        }
+
+        private void microphonesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateListener();
+        }
+
+        private void speakerComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateListener();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            recorderAudio = new RecorderAudio();
+            recorderVideo = new RecorderVideo();
+
+            recorderAudio.DevicesUpdated += RecorderAudio_DevicesUpdated;
+
+            RecorderAudio_DevicesUpdated();
+
+            Assembly a = Assembly.GetExecutingAssembly();
+            Stream st = a.GetManifestResourceStream("RecordVideoAndAudio.Icon.IconsPlay.ico");
+            this.Icon = new Icon(st);
+
+
+
+            ReadConfig();
+
+            if (string.IsNullOrEmpty(resultFolderTextBox.Text))
+            {
+                resultFolderTextBox.Text = Path.Combine(Environment.CurrentDirectory, "Records");
+                config = new Config
+                {
+                    MicrophoneName = (string)microphonesComboBox.SelectedItem,
+                    SpeakerName = (string)speakerComboBox.SelectedItem,
+                    ResultFolder = resultFolderTextBox.Text
+                };
+            }
+            Directory.CreateDirectory(resultFolderTextBox.Text);
+
+            UpdateStatistic();
+
+            UpdateListener();
         }
     }
 }
