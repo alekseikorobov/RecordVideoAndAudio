@@ -51,6 +51,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.progressBarMicrophone = new System.Windows.Forms.ProgressBar();
             this.progressBarSpeaker = new System.Windows.Forms.ProgressBar();
+            this.buttonOpenFolder = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // startRecordButton
@@ -145,7 +146,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.resultFolderTextBox.Location = new System.Drawing.Point(12, 259);
             this.resultFolderTextBox.Name = "resultFolderTextBox";
-            this.resultFolderTextBox.Size = new System.Drawing.Size(351, 20);
+            this.resultFolderTextBox.Size = new System.Drawing.Size(278, 20);
             this.resultFolderTextBox.TabIndex = 8;
             this.resultFolderTextBox.TextChanged += new System.EventHandler(this.resultFolderTextBox_TextChanged);
             // 
@@ -254,11 +255,25 @@
             this.progressBarSpeaker.Size = new System.Drawing.Size(276, 11);
             this.progressBarSpeaker.TabIndex = 19;
             // 
+            // buttonOpenFolder
+            // 
+            this.buttonOpenFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOpenFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(200)));
+            this.buttonOpenFolder.Location = new System.Drawing.Point(293, 259);
+            this.buttonOpenFolder.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonOpenFolder.Name = "buttonOpenFolder";
+            this.buttonOpenFolder.Size = new System.Drawing.Size(69, 21);
+            this.buttonOpenFolder.TabIndex = 20;
+            this.buttonOpenFolder.Text = "Open";
+            this.buttonOpenFolder.UseVisualStyleBackColor = true;
+            this.buttonOpenFolder.Click += new System.EventHandler(this.buttonOpenFolder_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 306);
+            this.Controls.Add(this.buttonOpenFolder);
             this.Controls.Add(this.progressBarSpeaker);
             this.Controls.Add(this.progressBarMicrophone);
             this.Controls.Add(this.label3);
@@ -311,6 +326,7 @@
         public System.Windows.Forms.ComboBox speakerComboBox;
         public System.Windows.Forms.ProgressBar progressBarMicrophone;
         public System.Windows.Forms.ProgressBar progressBarSpeaker;
+        private System.Windows.Forms.Button buttonOpenFolder;
     }
 }
 

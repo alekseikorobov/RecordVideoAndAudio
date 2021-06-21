@@ -20,19 +20,21 @@ namespace RecordVideoAndAudio
             ///install ffmpeg-N-99919-g5bb313e723-win64-gpl-shared
             ///include to PATH
 
-            
+
         }
 
         private void RecorderAudio_DevicesUpdated()
         {
-            microphonesComboBox.Invoke((MethodInvoker)delegate {
+            microphonesComboBox.Invoke((MethodInvoker)delegate
+            {
                 microphonesComboBox.Items.Clear();
 
                 var list1 = recorderAudio.DevicesOut();
                 list1.ForEach(c => microphonesComboBox.Items.Add(c));
             });
 
-            speakerComboBox.Invoke((MethodInvoker)delegate {
+            speakerComboBox.Invoke((MethodInvoker)delegate
+            {
                 speakerComboBox.Items.Clear();
                 var list2 = recorderAudio.DevicesIn();
                 list2.ForEach(c => speakerComboBox.Items.Add(c));
@@ -81,14 +83,14 @@ namespace RecordVideoAndAudio
             IEnumerable<FileInfo> files = Enumerable.Empty<FileInfo>();
             foreach (string ext in extensions)
             {
-                files = files.Concat(dir.GetFiles(ext));
+                files = files.Concat(dir.GetFiles(ext, SearchOption.AllDirectories));
             }
             return files;
         }
         private void UpdateStatistic()
         {
             var dir = new DirectoryInfo(resultFolderTextBox.Text);
-            var files = GetFilesByExtensions(dir,"*.mp4","*.mp3");
+            var files = GetFilesByExtensions(dir, "*");
 
             var bytes = files.Sum(c => c.Length);
 
@@ -134,7 +136,7 @@ namespace RecordVideoAndAudio
                     MessageBox.Show("Select divace microphone");
                     return;
                 }
-                if (speakerComboBox.Visible &&  speakerComboBox.SelectedIndex < 0)
+                if (speakerComboBox.Visible && speakerComboBox.SelectedIndex < 0)
                 {
                     MessageBox.Show("Select divace speaker");
                     return;
@@ -152,8 +154,8 @@ namespace RecordVideoAndAudio
                 this.stopRecordButton.Enabled = true;
                 stopRecordButton.BackColor = Color.LightCoral;
                 isOnlyAudioCheckBox.Enabled = false;
-                
-                
+
+
                 this.Icon = Properties.Resources.IconRecording;
 
                 timeRecord = new TimeSpan();
@@ -310,6 +312,14 @@ namespace RecordVideoAndAudio
             UpdateStatistic();
 
             UpdateListener();
+        }
+
+        private void buttonOpenFolder_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(resultFolderTextBox.Text))
+            {
+                Process.Start(resultFolderTextBox.Text);
+            }
         }
     }
 }
