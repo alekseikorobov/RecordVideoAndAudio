@@ -119,6 +119,7 @@ namespace RecordVideoAndAudio
         bool isStart = false;
         TimeSpan timeRecord = new TimeSpan();
         public RecorderAudio recorderAudio;
+        private string fullName;
         private string fileName;
         private RecorderVideo recorderVideo;
 
@@ -168,11 +169,12 @@ namespace RecordVideoAndAudio
 
                 timeRecord = new TimeSpan();
                 timer1.Start();
-
-                fileName = Path.Combine(config.ResultFolder, $"record_{DateTime.Now:yyyyMMdd_HHmmss}");
+                this.textBoxFileName.Text = $"record_{DateTime.Now:yyyyMMdd_HHmmss}";
+                fileName = this.textBoxFileName.Text;
+                fullName = Path.Combine(config.ResultFolder, this.textBoxFileName.Text);
                 try
                 {
-                    recorderAudio.StartRecording(fileName
+                    recorderAudio.StartRecording(fullName
                         , config.IsCheckBoxMicrophone.Value ? (string)microphonesComboBox.SelectedItem : null
                         , config.IsCheckBoxSpeaker.Value ? (string)speakerComboBox.SelectedItem : null
                         );
@@ -181,7 +183,8 @@ namespace RecordVideoAndAudio
                     {
                         var encoder = KnownFourCCs.Codecs.MotionJpeg;
                         var encodingQuality = 70;
-                        recorderVideo.StartRecord(fileName + "_video", encoder, encodingQuality);
+                        string aviPath = Path.ChangeExtension(fullName, ".video");
+                        recorderVideo.StartRecord(aviPath, encoder, encodingQuality);
                     }
 
                     resultLabel.Text = "";
@@ -215,21 +218,42 @@ namespace RecordVideoAndAudio
 
                     MixingAudioAndVideo();
                 }
+                else
+                {
+                    MoveAudio();
+                }
 
-                resultLabel.Text = "recorded - " + recorderAudio.FileName;
+                resultLabel.Text = "recorded - ";// + recorderAudio.FileName;
                 UpdateStatistic();
             }
         }
+        private void MoveAudio()
+        {
+            GetName(".mp3", true);
+        }
+        private string GetName(string extention, bool isMove)
+        {
+            string output = Path.ChangeExtension(fullName, extention);
+
+            if (isMove && !File.Exists(output))
+                throw new Exception($"Not exists File {output}");
+
+            if (this.textBoxFileName.Text != fileName)
+            {
+                string fullNameNew = Path.Combine(config.ResultFolder, this.textBoxFileName.Text);
+                string outputNew = Path.ChangeExtension(fullNameNew, extention);
+                if (isMove)
+                    File.Move(output, outputNew);
+                output = outputNew;
+            }
+            return output;
+        }
+
         private void MixingAudioAndVideo()
         {
-            string output = Path.ChangeExtension(fileName, ".mp4");
-            string mp3Path = Path.ChangeExtension(fileName, ".mp3");
-            string aviPath = fileName + "_video";
-
-            if (!File.Exists(mp3Path))
-                throw new Exception($"Not exists File {mp3Path}");
-            if (!File.Exists(aviPath))
-                throw new Exception($"Not exists File {aviPath}");
+            string output = GetName(".mp4", false);
+            string mp3Path = GetName(".mp3", true);
+            string aviPath = GetName(".video", true);
 
             string args = $"-i \"{aviPath}\" -i \"{mp3Path}\" -shortest {output}";
             ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -252,12 +276,12 @@ namespace RecordVideoAndAudio
             Directory.CreateDirectory(tempFolder);
 
             var mp3File = Path.GetFileName(mp3Path);
-            var mp3PathNew = Path.Combine(tempFolder, mp3File);
-            File.Move(mp3Path, mp3PathNew);
+            var mp3PathTemp = Path.Combine(tempFolder, mp3File);
+            File.Move(mp3Path, mp3PathTemp);
 
             var aviFile = Path.GetFileName(aviPath);
-            var aviPathNew = Path.Combine(tempFolder, aviFile);
-            File.Move(aviPath, aviPathNew);
+            var aviPathTemp = Path.Combine(tempFolder, aviFile);
+            File.Move(aviPath, aviPathTemp);
         }
 
         private void timer1_Tick(object sender, EventArgs e)

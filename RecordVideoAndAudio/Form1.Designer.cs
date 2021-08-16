@@ -54,6 +54,9 @@
             this.buttonOpenFolder = new System.Windows.Forms.Button();
             this.checkBoxMicrophone = new System.Windows.Forms.CheckBox();
             this.checkBoxSpeaker = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBoxFileName = new System.Windows.Forms.TextBox();
+            this.checkBoxNotListener = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // startRecordButton
@@ -129,7 +132,7 @@
             this.microphonesComboBox.FormattingEnabled = true;
             this.microphonesComboBox.Location = new System.Drawing.Point(87, 12);
             this.microphonesComboBox.Name = "microphonesComboBox";
-            this.microphonesComboBox.Size = new System.Drawing.Size(262, 21);
+            this.microphonesComboBox.Size = new System.Drawing.Size(292, 21);
             this.microphonesComboBox.TabIndex = 6;
             this.microphonesComboBox.SelectedIndexChanged += new System.EventHandler(this.microphonesComboBox_SelectedIndexChanged);
             // 
@@ -146,9 +149,9 @@
             // 
             this.resultFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.resultFolderTextBox.Location = new System.Drawing.Point(12, 259);
+            this.resultFolderTextBox.Location = new System.Drawing.Point(12, 307);
             this.resultFolderTextBox.Name = "resultFolderTextBox";
-            this.resultFolderTextBox.Size = new System.Drawing.Size(278, 20);
+            this.resultFolderTextBox.Size = new System.Drawing.Size(308, 20);
             this.resultFolderTextBox.TabIndex = 8;
             this.resultFolderTextBox.TextChanged += new System.EventHandler(this.resultFolderTextBox_TextChanged);
             // 
@@ -156,7 +159,7 @@
             // 
             this.resultFolderLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.resultFolderLabel.AutoSize = true;
-            this.resultFolderLabel.Location = new System.Drawing.Point(13, 240);
+            this.resultFolderLabel.Location = new System.Drawing.Point(13, 288);
             this.resultFolderLabel.Name = "resultFolderLabel";
             this.resultFolderLabel.Size = new System.Drawing.Size(66, 13);
             this.resultFolderLabel.TabIndex = 9;
@@ -166,7 +169,7 @@
             // 
             this.StatisticLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.StatisticLabel.AutoSize = true;
-            this.StatisticLabel.Location = new System.Drawing.Point(12, 286);
+            this.StatisticLabel.Location = new System.Drawing.Point(12, 334);
             this.StatisticLabel.Name = "StatisticLabel";
             this.StatisticLabel.Size = new System.Drawing.Size(47, 13);
             this.StatisticLabel.TabIndex = 10;
@@ -176,7 +179,7 @@
             // 
             this.statisticValueLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.statisticValueLabel.AutoSize = true;
-            this.statisticValueLabel.Location = new System.Drawing.Point(66, 286);
+            this.statisticValueLabel.Location = new System.Drawing.Point(66, 334);
             this.statisticValueLabel.Name = "statisticValueLabel";
             this.statisticValueLabel.Size = new System.Drawing.Size(0, 13);
             this.statisticValueLabel.TabIndex = 11;
@@ -186,7 +189,7 @@
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.saveButton.Enabled = false;
             this.saveButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(200)));
-            this.saveButton.Location = new System.Drawing.Point(293, 231);
+            this.saveButton.Location = new System.Drawing.Point(323, 279);
             this.saveButton.Margin = new System.Windows.Forms.Padding(0);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(69, 21);
@@ -211,7 +214,7 @@
             this.speakerComboBox.FormattingEnabled = true;
             this.speakerComboBox.Location = new System.Drawing.Point(87, 39);
             this.speakerComboBox.Name = "speakerComboBox";
-            this.speakerComboBox.Size = new System.Drawing.Size(262, 21);
+            this.speakerComboBox.Size = new System.Drawing.Size(292, 21);
             this.speakerComboBox.TabIndex = 13;
             this.speakerComboBox.SelectedIndexChanged += new System.EventHandler(this.speakerComboBox_SelectedIndexChanged);
             // 
@@ -249,7 +252,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarMicrophone.Location = new System.Drawing.Point(87, 67);
             this.progressBarMicrophone.Name = "progressBarMicrophone";
-            this.progressBarMicrophone.Size = new System.Drawing.Size(283, 11);
+            this.progressBarMicrophone.Size = new System.Drawing.Size(313, 11);
             this.progressBarMicrophone.TabIndex = 18;
             // 
             // progressBarSpeaker
@@ -258,14 +261,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarSpeaker.Location = new System.Drawing.Point(87, 86);
             this.progressBarSpeaker.Name = "progressBarSpeaker";
-            this.progressBarSpeaker.Size = new System.Drawing.Size(283, 11);
+            this.progressBarSpeaker.Size = new System.Drawing.Size(313, 11);
             this.progressBarSpeaker.TabIndex = 19;
             // 
             // buttonOpenFolder
             // 
             this.buttonOpenFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOpenFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(200)));
-            this.buttonOpenFolder.Location = new System.Drawing.Point(293, 259);
+            this.buttonOpenFolder.Location = new System.Drawing.Point(323, 307);
             this.buttonOpenFolder.Margin = new System.Windows.Forms.Padding(0);
             this.buttonOpenFolder.Name = "buttonOpenFolder";
             this.buttonOpenFolder.Size = new System.Drawing.Size(69, 21);
@@ -280,7 +283,7 @@
             this.checkBoxMicrophone.AutoSize = true;
             this.checkBoxMicrophone.Checked = true;
             this.checkBoxMicrophone.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMicrophone.Location = new System.Drawing.Point(355, 15);
+            this.checkBoxMicrophone.Location = new System.Drawing.Point(385, 15);
             this.checkBoxMicrophone.Name = "checkBoxMicrophone";
             this.checkBoxMicrophone.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMicrophone.TabIndex = 21;
@@ -293,18 +296,51 @@
             this.checkBoxSpeaker.AutoSize = true;
             this.checkBoxSpeaker.Checked = true;
             this.checkBoxSpeaker.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxSpeaker.Location = new System.Drawing.Point(355, 42);
+            this.checkBoxSpeaker.Location = new System.Drawing.Point(385, 42);
             this.checkBoxSpeaker.Name = "checkBoxSpeaker";
             this.checkBoxSpeaker.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSpeaker.TabIndex = 22;
             this.checkBoxSpeaker.UseVisualStyleBackColor = true;
             this.checkBoxSpeaker.CheckedChanged += new System.EventHandler(this.checkBoxSpeaker_CheckedChanged);
             // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(14, 230);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(54, 13);
+            this.label5.TabIndex = 24;
+            this.label5.Text = "File Name";
+            // 
+            // textBoxFileName
+            // 
+            this.textBoxFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxFileName.Location = new System.Drawing.Point(13, 249);
+            this.textBoxFileName.Name = "textBoxFileName";
+            this.textBoxFileName.Size = new System.Drawing.Size(308, 20);
+            this.textBoxFileName.TabIndex = 23;
+            // 
+            // checkBoxNotListener
+            // 
+            this.checkBoxNotListener.AutoSize = true;
+            this.checkBoxNotListener.Location = new System.Drawing.Point(95, 119);
+            this.checkBoxNotListener.Name = "checkBoxNotListener";
+            this.checkBoxNotListener.Size = new System.Drawing.Size(74, 17);
+            this.checkBoxNotListener.TabIndex = 25;
+            this.checkBoxNotListener.Text = "Not Listen";
+            this.checkBoxNotListener.UseVisualStyleBackColor = true;
+            this.checkBoxNotListener.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(382, 306);
+            this.ClientSize = new System.Drawing.Size(412, 354);
+            this.Controls.Add(this.checkBoxNotListener);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.textBoxFileName);
             this.Controls.Add(this.checkBoxSpeaker);
             this.Controls.Add(this.checkBoxMicrophone);
             this.Controls.Add(this.buttonOpenFolder);
@@ -363,6 +399,9 @@
         private System.Windows.Forms.Button buttonOpenFolder;
         private System.Windows.Forms.CheckBox checkBoxMicrophone;
         private System.Windows.Forms.CheckBox checkBoxSpeaker;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBoxFileName;
+        private System.Windows.Forms.CheckBox checkBoxNotListener;
     }
 }
 
