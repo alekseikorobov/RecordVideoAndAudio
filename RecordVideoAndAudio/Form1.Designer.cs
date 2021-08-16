@@ -52,6 +52,8 @@
             this.progressBarMicrophone = new System.Windows.Forms.ProgressBar();
             this.progressBarSpeaker = new System.Windows.Forms.ProgressBar();
             this.buttonOpenFolder = new System.Windows.Forms.Button();
+            this.checkBoxMicrophone = new System.Windows.Forms.CheckBox();
+            this.checkBoxSpeaker = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // startRecordButton
@@ -127,7 +129,7 @@
             this.microphonesComboBox.FormattingEnabled = true;
             this.microphonesComboBox.Location = new System.Drawing.Point(87, 12);
             this.microphonesComboBox.Name = "microphonesComboBox";
-            this.microphonesComboBox.Size = new System.Drawing.Size(276, 21);
+            this.microphonesComboBox.Size = new System.Drawing.Size(262, 21);
             this.microphonesComboBox.TabIndex = 6;
             this.microphonesComboBox.SelectedIndexChanged += new System.EventHandler(this.microphonesComboBox_SelectedIndexChanged);
             // 
@@ -209,7 +211,7 @@
             this.speakerComboBox.FormattingEnabled = true;
             this.speakerComboBox.Location = new System.Drawing.Point(87, 39);
             this.speakerComboBox.Name = "speakerComboBox";
-            this.speakerComboBox.Size = new System.Drawing.Size(276, 21);
+            this.speakerComboBox.Size = new System.Drawing.Size(262, 21);
             this.speakerComboBox.TabIndex = 13;
             this.speakerComboBox.SelectedIndexChanged += new System.EventHandler(this.speakerComboBox_SelectedIndexChanged);
             // 
@@ -243,16 +245,20 @@
             // 
             // progressBarMicrophone
             // 
+            this.progressBarMicrophone.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarMicrophone.Location = new System.Drawing.Point(87, 67);
             this.progressBarMicrophone.Name = "progressBarMicrophone";
-            this.progressBarMicrophone.Size = new System.Drawing.Size(276, 11);
+            this.progressBarMicrophone.Size = new System.Drawing.Size(283, 11);
             this.progressBarMicrophone.TabIndex = 18;
             // 
             // progressBarSpeaker
             // 
+            this.progressBarSpeaker.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarSpeaker.Location = new System.Drawing.Point(87, 86);
             this.progressBarSpeaker.Name = "progressBarSpeaker";
-            this.progressBarSpeaker.Size = new System.Drawing.Size(276, 11);
+            this.progressBarSpeaker.Size = new System.Drawing.Size(283, 11);
             this.progressBarSpeaker.TabIndex = 19;
             // 
             // buttonOpenFolder
@@ -268,11 +274,39 @@
             this.buttonOpenFolder.UseVisualStyleBackColor = true;
             this.buttonOpenFolder.Click += new System.EventHandler(this.buttonOpenFolder_Click);
             // 
+            // checkBoxMicrophone
+            // 
+            this.checkBoxMicrophone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxMicrophone.AutoSize = true;
+            this.checkBoxMicrophone.Checked = true;
+            this.checkBoxMicrophone.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMicrophone.Location = new System.Drawing.Point(355, 15);
+            this.checkBoxMicrophone.Name = "checkBoxMicrophone";
+            this.checkBoxMicrophone.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMicrophone.TabIndex = 21;
+            this.checkBoxMicrophone.UseVisualStyleBackColor = true;
+            this.checkBoxMicrophone.CheckedChanged += new System.EventHandler(this.checkBoxMicrophone_CheckedChanged);
+            // 
+            // checkBoxSpeaker
+            // 
+            this.checkBoxSpeaker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxSpeaker.AutoSize = true;
+            this.checkBoxSpeaker.Checked = true;
+            this.checkBoxSpeaker.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxSpeaker.Location = new System.Drawing.Point(355, 42);
+            this.checkBoxSpeaker.Name = "checkBoxSpeaker";
+            this.checkBoxSpeaker.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxSpeaker.TabIndex = 22;
+            this.checkBoxSpeaker.UseVisualStyleBackColor = true;
+            this.checkBoxSpeaker.CheckedChanged += new System.EventHandler(this.checkBoxSpeaker_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 306);
+            this.Controls.Add(this.checkBoxSpeaker);
+            this.Controls.Add(this.checkBoxMicrophone);
             this.Controls.Add(this.buttonOpenFolder);
             this.Controls.Add(this.progressBarSpeaker);
             this.Controls.Add(this.progressBarMicrophone);
@@ -327,6 +361,8 @@
         public System.Windows.Forms.ProgressBar progressBarMicrophone;
         public System.Windows.Forms.ProgressBar progressBarSpeaker;
         private System.Windows.Forms.Button buttonOpenFolder;
+        private System.Windows.Forms.CheckBox checkBoxMicrophone;
+        private System.Windows.Forms.CheckBox checkBoxSpeaker;
     }
 }
 

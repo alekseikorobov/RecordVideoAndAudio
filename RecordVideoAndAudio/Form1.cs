@@ -69,6 +69,10 @@ namespace RecordVideoAndAudio
                     microphonesComboBox.SelectedItem = config.MicrophoneName;
                 if (!string.IsNullOrEmpty(config.SpeakerName))
                     speakerComboBox.SelectedItem = config.SpeakerName;
+                if (config.IsCheckBoxMicrophone.HasValue)
+                    checkBoxMicrophone.Checked = config.IsCheckBoxMicrophone.Value;
+                if (config.IsCheckBoxSpeaker.HasValue)
+                    checkBoxSpeaker.Checked = config.IsCheckBoxSpeaker.Value;
             }
         }
         private void SaveConfig()
@@ -145,6 +149,8 @@ namespace RecordVideoAndAudio
                 {
                     config.MicrophoneName = (string)microphonesComboBox.SelectedItem;
                     config.SpeakerName = (string)speakerComboBox.SelectedItem;
+                    config.IsCheckBoxMicrophone = checkBoxMicrophone.Checked;
+                    config.IsCheckBoxSpeaker = checkBoxSpeaker.Checked;
                     SaveConfig();
                 }
 
@@ -154,9 +160,11 @@ namespace RecordVideoAndAudio
                 this.stopRecordButton.Enabled = true;
                 stopRecordButton.BackColor = Color.LightCoral;
                 isOnlyAudioCheckBox.Enabled = false;
+                checkBoxMicrophone.Enabled = false;
+                checkBoxSpeaker.Enabled = false;
 
 
-                this.Icon = Properties.Resources.IconRecording;
+                //this.Icon = Properties.Resources.IconRecording;
 
                 timeRecord = new TimeSpan();
                 timer1.Start();
@@ -164,8 +172,10 @@ namespace RecordVideoAndAudio
                 fileName = Path.Combine(config.ResultFolder, $"record_{DateTime.Now:yyyyMMdd_HHmmss}");
                 try
                 {
-                    recorderAudio.StartRecording(fileName, (string)microphonesComboBox.SelectedItem,
-                        (string)speakerComboBox.SelectedItem);
+                    recorderAudio.StartRecording(fileName
+                        , config.IsCheckBoxMicrophone.Value ? (string)microphonesComboBox.SelectedItem : null
+                        , config.IsCheckBoxSpeaker.Value ? (string)speakerComboBox.SelectedItem : null
+                        );
 
                     if (!isOnlyAudioCheckBox.Checked)
                     {
@@ -195,7 +205,7 @@ namespace RecordVideoAndAudio
                 isOnlyAudioCheckBox.Enabled = true;
                 timer1.Stop();
 
-                this.Icon = Properties.Resources.IconsPlay;
+                //this.Icon = Properties.Resources.IconsPlay;
 
                 recorderAudio.StopRecording();
 
@@ -265,6 +275,11 @@ namespace RecordVideoAndAudio
         private void saveButton_Click(object sender, EventArgs e)
         {
             config.ResultFolder = resultFolderTextBox.Text;
+            config.IsCheckBoxMicrophone = checkBoxMicrophone.Checked;
+            config.IsCheckBoxSpeaker = checkBoxSpeaker.Checked;
+            config.MicrophoneName = (string)microphonesComboBox.SelectedItem;
+            config.SpeakerName = (string)speakerComboBox.SelectedItem;
+
             SaveConfig();
             UpdateStatistic();
             saveButton.Enabled = false;
@@ -282,6 +297,8 @@ namespace RecordVideoAndAudio
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            SetToolTip();
+
             recorderAudio = new RecorderAudio();
             recorderVideo = new RecorderVideo();
 
@@ -289,9 +306,9 @@ namespace RecordVideoAndAudio
 
             RecorderAudio_DevicesUpdated();
 
-            Assembly a = Assembly.GetExecutingAssembly();
-            Stream st = a.GetManifestResourceStream("RecordVideoAndAudio.Icon.IconsPlay.ico");
-            this.Icon = new Icon(st);
+            //Assembly a = Assembly.GetExecutingAssembly();
+            //Stream st = a.GetManifestResourceStream("RecordVideoAndAudio.Icon.IconsPlay.ico");
+            //this.Icon = new Icon(st);
 
 
 
@@ -314,12 +331,51 @@ namespace RecordVideoAndAudio
             UpdateListener();
         }
 
+        private void SetToolTip()
+        {
+            // Create the ToolTip and associate with the Form container.
+            ToolTip toolTip1 = new ToolTip();
+
+            // Set up the delays for the ToolTip.
+            toolTip1.AutoPopDelay = 5000;
+            toolTip1.InitialDelay = 1000;
+            toolTip1.ReshowDelay = 500;
+            // Force the ToolTip text to be displayed whether or not the form is active.
+            toolTip1.ShowAlways = true;
+
+            // Set up the ToolTip text for the Button and Checkbox.
+            toolTip1.SetToolTip(this.checkBoxSpeaker, "Record Speaker");
+            toolTip1.SetToolTip(this.checkBoxMicrophone, "Record Microphone");
+        }
+
         private void buttonOpenFolder_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(resultFolderTextBox.Text))
-            {
                 Process.Start(resultFolderTextBox.Text);
+        }
+
+        private void checkBoxMicrophone_CheckedChanged(object sender, EventArgs e)
+        {
+            if (config != null)
+            {
+                if (!config.IsCheckBoxMicrophone.HasValue)
+                    saveButton.Enabled = true;
+                else
+                    saveButton.Enabled = config.IsCheckBoxMicrophone.Value != checkBoxMicrophone.Enabled;
             }
+            //UpdateListener();
+        }
+
+        private void checkBoxSpeaker_CheckedChanged(object sender, EventArgs e)
+        {
+            if (config != null)
+            {
+                if (!config.IsCheckBoxSpeaker.HasValue)
+                    saveButton.Enabled = true;
+                else
+                    saveButton.Enabled = config.IsCheckBoxSpeaker.Value != checkBoxSpeaker.Enabled;
+            }
+            //UpdateListener();
         }
     }
 }

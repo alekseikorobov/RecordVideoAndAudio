@@ -100,9 +100,24 @@ namespace Captura.Audio
 
         public IAudioProvider GetAudioProvider(MMDevice Microphone, MMDevice Speaker)
         {
-            return new MixedAudioProvider(
-                        new WasapiCaptureProvider(DefaultMicrophone.Device),
-                        new WasapiLoopbackCaptureProvider(DefaultSpeaker.Device));
+            if (Microphone != null && Speaker != null)
+            {
+                return new MixedAudioProvider(
+                            new WasapiCaptureProvider(Microphone),
+                            new WasapiLoopbackCaptureProvider(Speaker));
+            }
+            else if (Microphone != null && Speaker == null)
+            {
+                return new MixedAudioProvider(new WasapiCaptureProvider(Microphone));
+            }
+            else if(Microphone == null && Speaker != null)
+            {
+                return new MixedAudioProvider(new WasapiLoopbackCaptureProvider(Speaker));
+            }
+            else
+            {
+                throw new Exception("Microphone and Speaker could not be empty");
+            }
         }
     }
 }

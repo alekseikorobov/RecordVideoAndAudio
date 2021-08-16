@@ -26,13 +26,12 @@ namespace RecordVideoAndAudio
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            File.AppendAllText("Log.txt", $"{DateTime.Now:yyyy-MM-dd HH\\:mm\\:ss} Application_ThreadException\t sender - {sender}\t Exception - IsTerminating - {e.IsTerminating} ExceptionObject - {e.ExceptionObject}");
+            File.AppendAllText("Log.txt", $"{DateTime.Now:yyyy-MM-dd HH\\:mm\\:ss} Application_ThreadException\t sender - {sender}\t Exception - IsTerminating - {e.IsTerminating} ExceptionObject - {e.ExceptionObject}\r\n");
         }
 
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            File.AppendAllText("Log.txt", $"{DateTime.Now:yyyy-MM-dd HH\\:mm\\:ss} Application_ThreadException\t sender - {sender}\t Exception - {e.Exception}");
-            MessageBox.Show(e.Exception.ToString());
+            File.AppendAllText("Log.txt", $"{DateTime.Now:yyyy-MM-dd HH\\:mm\\:ss} Application_ThreadException\t sender - {sender}\t Exception - {e.Exception}\r\n");
         }
     }
 }

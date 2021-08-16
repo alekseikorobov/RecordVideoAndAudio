@@ -75,15 +75,9 @@ namespace RecordVideoAndAudio
             try
             {
                 var microphone = GetDeviceInByName(inputDeviceName);
-                if (microphone == null)
-                    throw new ArgumentNullException(nameof(microphone));
                 var speaker = GetDeviceOutByName(outputDeviceName);
-                if (speaker == null)
-                    throw new ArgumentNullException(nameof(speaker));
 
                 AudioProvider = _audioSource.GetAudioProvider(microphone, speaker);
-                //AudioProvider = _audioSource.GetAudioProviderDefault();
-
             }
             catch (Exception e)
             {
@@ -162,21 +156,13 @@ namespace RecordVideoAndAudio
         }
         public MMDevice GetDeviceOutByName(string name)
         {
-            foreach (var item in _devicesOut)
-            {
-                if (item.FriendlyName == name)
-                    return item;
-            }
-            return null;
+            if (string.IsNullOrEmpty(name)) return null;
+            return _devicesOut.FirstOrDefault(i => i.FriendlyName == name);
         }
         public MMDevice GetDeviceInByName(string name)
         {
-            foreach (var item in _devicesIn)
-            {
-                if (item.FriendlyName == name)
-                    return item;
-            }
-            return null;
+            if (string.IsNullOrEmpty(name)) return null;
+            return _devicesIn.FirstOrDefault(i => i.FriendlyName == name);
         }
 
         public void StopRecording()
