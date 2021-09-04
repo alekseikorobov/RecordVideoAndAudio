@@ -9,7 +9,5 @@
         string Extension { get; }
 
         string Description { get; }
-
-        IVideoFileWriter GetVideoFileWriter(VideoWriterArgs Args);
     }
 }

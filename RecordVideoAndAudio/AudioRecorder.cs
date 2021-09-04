@@ -20,10 +20,6 @@ namespace RecordVideoAndAudio
         /// </summary>
         void Stop();
 
-        /// <summary>
-        /// Fired when an error occurs.
-        /// </summary>
-        event Action<Exception> ErrorOccurred;
     }
     public class AudioRecorder : IRecorder
     {
@@ -111,6 +107,6 @@ namespace RecordVideoAndAudio
             }
         }
 
-        public event Action<Exception> ErrorOccurred;
+        
     }
 }

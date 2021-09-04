@@ -121,7 +121,6 @@ namespace ScreenshotCaptureWithMouse.ScreenCapture
         {
             Bitmap desktopBMP;
             Bitmap cursorBMP;
-            Bitmap finalBMP;
             Graphics g;
             Rectangle r;
 

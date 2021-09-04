@@ -63,7 +63,6 @@ namespace Captura
         {
         }
 
-        //public static T Get<T>() => Kernel.Get<T>();
         public static void LaunchFile(ProcessStartInfo StartInfo)
         {
             try { Process.Start(StartInfo.FileName); }
@@ -71,7 +70,7 @@ namespace Captura
             {
                 //MessageProvider.ShowError($"Could not find file: {StartInfo.FileName}");
             }
-            catch (Exception e)
+            catch// (Exception e)
             {
                 //MessageProvider.ShowException(e, $"Could not open file: {StartInfo.FileName}");
             }

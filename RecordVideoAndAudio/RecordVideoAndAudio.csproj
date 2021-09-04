@@ -103,7 +103,6 @@
     <Compile Include="Base\IBitmapFrame.cs" />
     <Compile Include="Base\ILocalizationProvider.cs" />
     <Compile Include="Base\IVideoConverter.cs" />
-    <Compile Include="Base\IVideoFileWriter.cs" />
     <Compile Include="Base\IVideoWriterItem.cs" />
     <Compile Include="Base\IVideoWriterProvider.cs" />
     <Compile Include="Base\NotifyPropertyChanged.cs" />
@@ -150,9 +149,7 @@
     <Compile Include="FFmpeg\Video\Codecs\XvidVideoCodec.cs" />
     <Compile Include="FFmpeg\Video\Codecs\YouTubeLiveVideoCodec.cs" />
     <Compile Include="FFmpeg\Video\FFmpegGifConverter.cs" />
-    <Compile Include="FFmpeg\Video\FFmpegReplayWriter.cs" />
     <Compile Include="FFmpeg\Video\FFmpegVideoConverter.cs" />
-    <Compile Include="FFmpeg\Video\FFmpegVideoWriter.cs" />
     <Compile Include="FFmpeg\Video\FFmpegVideoWriterArgs.cs" />
     <Compile Include="FFmpeg\Video\FFmpegWriterProvider.cs" />
     <Compile Include="FFmpeg\Video\StreamingWriterProvider.cs" />
