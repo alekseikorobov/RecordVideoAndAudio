@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 
 namespace RecordVideoAndAudio
@@ -146,6 +147,7 @@ namespace RecordVideoAndAudio
                     MessageBox.Show("Select divace speaker");
                     return;
                 }
+                UpdateListener();
                 if (microphonesComboBox.Visible && speakerComboBox.Visible)
                 {
                     config.MicrophoneName = (string)microphonesComboBox.SelectedItem;
@@ -215,6 +217,7 @@ namespace RecordVideoAndAudio
                 if (!isOnlyAudioCheckBox.Checked)
                 {
                     recorderVideo.StopRecord();
+                    //recorderVideo.StopRecord((e as BreakEventArgs)?.IsBreak == true);
 
                     MixingAudioAndVideo();
                 }
@@ -288,6 +291,15 @@ namespace RecordVideoAndAudio
         {
             timeRecord = timeRecord.Add(TimeSpan.FromSeconds(1));
             timeValueLabel.Text = timeRecord.ToString("hh\\:mm\\:ss");
+
+            if (!linkLabelError.Visible && recorderVideo.Exceptions.Any())
+            {
+                linkLabelError.Visible = true;
+            }
+            if (linkLabelError.Visible && recorderVideo.CountErrors > 0)
+            {
+                linkLabelError.Text = $"Errors: {recorderVideo.CountErrors}";
+            }
         }
 
         private void resultFolderTextBox_TextChanged(object sender, EventArgs e)
@@ -311,12 +323,12 @@ namespace RecordVideoAndAudio
 
         private void microphonesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateListener();
+            //UpdateListener();
         }
 
         private void speakerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateListener();
+            //UpdateListener();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -325,6 +337,7 @@ namespace RecordVideoAndAudio
 
             recorderAudio = new RecorderAudio();
             recorderVideo = new RecorderVideo();
+            //recorderVideo.Break += RecorderVideo_Break;
 
             recorderAudio.DevicesUpdated += RecorderAudio_DevicesUpdated;
 
@@ -352,7 +365,16 @@ namespace RecordVideoAndAudio
 
             UpdateStatistic();
 
-            UpdateListener();
+            //UpdateListener();
+        }
+
+        private void RecorderVideo_Break()
+        {
+            this.Invoke((MethodInvoker)delegate 
+            {
+                stopRecordButton_Click(this, new BreakEventArgs { IsBreak = true });
+                startRecordButton_Click(this, null);
+            });
         }
 
         private void SetToolTip()
@@ -401,5 +423,22 @@ namespace RecordVideoAndAudio
             }
             //UpdateListener();
         }
+
+        private void linkLabelError_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var ex in recorderVideo.Exceptions)
+            {
+                sb.AppendLine(ex.Message + " " + ex.StackTrace);
+                sb.AppendLine();
+            }
+            Clipboard.SetText(sb.ToString());
+            MessageBox.Show(sb.ToString());
+        }
+    }
+    public class BreakEventArgs: EventArgs
+    {
+        public bool IsBreak { get; set; }
     }
 }

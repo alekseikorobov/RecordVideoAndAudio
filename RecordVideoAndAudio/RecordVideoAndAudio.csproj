@@ -112,6 +112,7 @@
     <Compile Include="Base\VideoConverterParams.cs" />
     <Compile Include="Base\VideoWriterArgs.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="ExceptionComparer.cs" />
     <Compile Include="FFmpeg\ArgsBuilder\FFmpegArgs.cs" />
     <Compile Include="FFmpeg\ArgsBuilder\FFmpegArgsBuilder.cs" />
     <Compile Include="FFmpeg\ArgsBuilder\FFmpegInputArgs.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecorderAudio_old.cs" />
     <Compile Include="RecorderAudio.cs" />
+    <Compile Include="RecorderVideoByPartition.cs" />
     <Compile Include="RecorderVideo.cs" />
     <Compile Include="ScreenCapture\CaptureScreen.cs" />
     <Compile Include="ScreenCapture\GDIStuff.cs" />

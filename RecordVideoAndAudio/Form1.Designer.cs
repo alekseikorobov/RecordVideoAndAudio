@@ -57,6 +57,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxFileName = new System.Windows.Forms.TextBox();
             this.checkBoxNotListener = new System.Windows.Forms.CheckBox();
+            this.linkLabelError = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // startRecordButton
@@ -333,11 +334,24 @@
             this.checkBoxNotListener.UseVisualStyleBackColor = true;
             this.checkBoxNotListener.Visible = false;
             // 
+            // linkLabelError
+            // 
+            this.linkLabelError.AutoSize = true;
+            this.linkLabelError.Location = new System.Drawing.Point(268, 156);
+            this.linkLabelError.Name = "linkLabelError";
+            this.linkLabelError.Size = new System.Drawing.Size(34, 13);
+            this.linkLabelError.TabIndex = 26;
+            this.linkLabelError.TabStop = true;
+            this.linkLabelError.Text = "Errors";
+            this.linkLabelError.Visible = false;
+            this.linkLabelError.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelError_LinkClicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(412, 354);
+            this.Controls.Add(this.linkLabelError);
             this.Controls.Add(this.checkBoxNotListener);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.textBoxFileName);
@@ -402,6 +416,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBoxFileName;
         private System.Windows.Forms.CheckBox checkBoxNotListener;
+        private System.Windows.Forms.LinkLabel linkLabelError;
     }
 }
 
