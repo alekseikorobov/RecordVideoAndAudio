@@ -258,7 +258,7 @@ namespace RecordVideoAndAudio
             string mp3Path = GetName(".mp3", true);
             string aviPath = GetName(".video", true);
 
-            string args = $"-i \"{aviPath}\" -i \"{mp3Path}\" -shortest {output}";
+            string args = $"-i \"{aviPath}\" -i \"{mp3Path}\" -shortest \"{output}\"";
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.CreateNoWindow = false;
             startInfo.FileName = Path.Combine(Environment.CurrentDirectory, @"lib\ffmpeg\ffmpeg.exe");
